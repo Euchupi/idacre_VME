@@ -1,21 +1,36 @@
 from pymongo import MongoClient
 import os
 
-username='daq'
-password=os.environ['MONGO_DAQ_PASSWORD']
-host='gw'
-port=27020
-auth_database='admin'
+
+
+
+host='192.168.1.88'
+port=27017
 database='daq'
 
-client=MongoClient(f'mongodb://{username}:{password}@{host}:{port}/{auth_database}')
 
+client=MongoClient(f'mongodb://{host}:{port}')
 db = client[database]
+
+# Collection list 
+# 1-aggregate status 
+# 2-board_map
+# 3-cable_map
+# 4-control
+# 5-detector_control
+# 6-log
+# 7-options
+# 8-status
+# 9-system_monitor
+
 
 # aggregate status
 db.create_collection('aggregate_status')
 db.aggregate_status.create_index([('detector', 1), ('_id', -1)])
 db.aggregate_status.create_index('number')
+
+
+
 
 # board and cable maps
 db.create_collection('board_map', validator={'$jsonSchema': {
@@ -59,10 +74,13 @@ db.create_collection('board_map', validator={'$jsonSchema': {
             'description': 'Optical link number'
         }
     }}})
-
 db.board_map.create_index('board')
 db.board_map.create_index([('crate', 1), ('slot', 1)], unique=True)
 db.board_map.create_index([('host', 1), ('link', 1), ('opt_bd', 1)], unique=True)
+
+
+
+
 db.create_collection('cable_map', validator={'$jsonSchema': {
     'bsonType': 'object',
     'required': ['pmt', 'detector', 'adc', 'adc_channel', 'threshold'],
@@ -91,6 +109,11 @@ db.create_collection('cable_map', validator={'$jsonSchema': {
 db.cable_map.create_index('pmt', unique=True)
 db.cable_map.create_index([('adc', 1), ('adc_channel', 1)], unique=True)
 
+
+
+
+
+# Collection "Control" that is used to send the command of the users . 
 db.create_collection('control', validator={'$jsonSchema': {
     'bsonType': 'object',
     'required': ['command', 'user', 'host', 'createdAt', 'acknowledged'],
@@ -105,14 +128,24 @@ db.create_collection('control', validator={'$jsonSchema': {
 db.control.create_index('createdAt', expireAfterSeconds=7*24*3600)
 db.control.create_index([('host', 1), ('_id', 1)])
 
+
+
+
 # detector control
 db.create_collection('detector_control')
 db.detector_control.create_index('key')
+
+
+
 
 # log
 db.create_collection('log')
 db.log.create_index('runid')
 db.log.create_index([('priority', 1), ('_id', -1)])
+
+
+
+
 
 # options
 db.create_collection('options', validator={'$jsonSchema': {
@@ -138,13 +171,21 @@ db.create_collection('options', validator={'$jsonSchema': {
     }}})
 db.options.create_index('name')
 
+
+
 # status
 db.create_collection('status')
 db.status.create_index('time', expireAfterSeconds=3*24*3600)
 db.status.create_index([('host', 1), ('_id', -1)])
 
+
+
 # system monitor
 db.create_collection('system_monitor')
 db.system_monitor.create_index('time', expireAfterSeconds=3*24*3600)
 db.system_monitor.create_index([('host', 1), ('_id', -1)])
+
+
+with open("/root/daq_database_collections.txt","w") as f : 
+    print("daq database Collections{}".format(db.list_collection_names()),file=f)
 
