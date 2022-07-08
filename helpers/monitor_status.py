@@ -3,12 +3,11 @@ from pymongo import MongoClient
 import os
 import time
 
-client = MongoClient("mongodb://192.168.1.88:27017/admin")
 
 # This python script keep reading the status of the detector 
+client = MongoClient("mongodb://192.168.1.88:27017/admin")
 db = client['daq']
 collection = db['status']
-
 STATUS = ["Idle", "Arming", "Armed", "Running", "Error"]
 
 
