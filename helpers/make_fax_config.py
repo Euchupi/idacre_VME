@@ -63,7 +63,7 @@ def main():
 
     board_doc = {
             "name": "fax_%i_boards" % n_boards,
-            "user": "darryl",
+            "user": "chengjie",
             "description": "fax subconfig",
             "detector": "include",
             "boards": boards,
@@ -71,7 +71,7 @@ def main():
             }
     channel_doc = {
             "name": "fax_%i_channels" % n_pmts,
-            "user": "darryl",
+            "user": "chengjie",
             "description": "fax subconfig",
             "detector": "include",
             "channels": channel_map,
@@ -79,7 +79,7 @@ def main():
             }
     generic_doc = {
             "name": "fax_common_opts",
-            "user": "darryl",
+            "user": "chengjie",
             "description": "fax subconfig",
             "detector": "include",
             "processing_threads": {"reader4_reader_0": 4},
@@ -89,7 +89,7 @@ def main():
             }
     strax_opts = {
             "name": "fax_strax_options",
-            "user": "darryl",
+            "user": "chengjie",
             "description": "fax subconfig",
             "detector": "include",
             "strax_chunk_length": 5.0,
@@ -102,7 +102,7 @@ def main():
             }
     doc = {
             "name": args.name,
-            "user": "darryl",
+            "user": "chengjie",
             "desription": "fax config, size %i" % args.size,
             "fax_options": {
                 "rate": args.rate,
@@ -119,7 +119,7 @@ def main():
                 strax_opts['name'],
                 ]
             }
-    with MongoClient("mongodb://daq:%s@xenon1t-daq:27017/admin" % os.environ['MONGO_PASSWORD_DAQ']) as client:
+    with MongoClient("mongodb://192.168.1.88:27017") as client:
         coll = client["testdb"]["options"]
         coll.update_one({"name": args.name}, {"$set": doc}, upsert=True)
         coll.update_one({"name": strax_opts['name']}, {'$set': strax_opts}, upsert=True)
