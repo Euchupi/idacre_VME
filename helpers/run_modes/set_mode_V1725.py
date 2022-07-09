@@ -5,7 +5,7 @@ import os
 
 
 # the run_mode data is stored at the options collection . 
-client = MongoClient("mongodb://192.168.1.88:27017)
+client = MongoClient("mongodb://192.168.1.88:27017")
 db = client['daq']
 collection = db['options']
 
@@ -14,16 +14,19 @@ collection = db['options']
 run_mode = {
 	# the run_mode name must be unique 
     "name": "default_firmware_settings",
-    "user": "zhut",
+    "user": "chengjie",
     "description": "Setup for default firmware",
-    "detector" : "NaI",
-    "mongo_uri": "mongodb://daq:%s@localhost:27017/admin"%os.environ["MONGO_PASSWORD"],
-    "mongo_database": "xenonnt",
-    "mongo_collection": "test_NaI",
+    "detector" : "tpc",
+	"detectors": {"detector" : "tpc",
+				  "hostname" : "RelicsDAQ",
+				  "active" : "true",
+				  "stop_after" : "600"}, # second
+    "mongo_uri": "mongodb://192.168.1.88:27017",
+    "mongo_database": "daq",
     "run_start":0,
     "strax_chunk_overlap": 500000000,
     "strax_header_size": 31,
-    "strax_output_path": "/home/zhut/raw",
+    "strax_output_path": "/home/chengjie",
     "strax_chunk_length": 5000000000,
     "strax_fragment_length": 220,
     "baseline_dac_mode": "fit",
@@ -119,3 +122,19 @@ try:
 except Exception as e:
     print("Insert failed. Maybe your JSON is bad. Error follows:")
     print(e)
+
+
+# we need to make sure some convention is satisfied
+detector_from_path = run_mode['strax_output_path'].split('/')
+
+if detector_from_path[-1]!='temp':
+	print('Not conventional path. Should be /data/detector_name/temp')
+	exit(0)
+
+if run_mode['detector'] not in detector_from_path:
+	print('Inconsistent save path and detector name. They should be the same')
+	exit(0)
+
+
+
+print("New runmode has been added as a document of collection 'options'")
