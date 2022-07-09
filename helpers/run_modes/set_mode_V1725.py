@@ -127,8 +127,8 @@ except Exception as e:
 # we need to make sure some convention is satisfied
 detector_from_path = run_mode['strax_output_path'].split('/')
 
-if detector_from_path[-1]!='temp':
-	print('Not conventional path. Should be /data/detector_name/temp')
+if detector_from_path[-1]!='home':
+	print('Not conventional path. Should be /home/users')
 	exit(0)
 
 if run_mode['detector'] not in detector_from_path:
