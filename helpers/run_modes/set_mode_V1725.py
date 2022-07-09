@@ -26,7 +26,7 @@ run_mode = {
     "run_start":0,
     "strax_chunk_overlap": 500000000,
     "strax_header_size": 31,
-    "strax_output_path": "/home/chengjie",
+    "strax_output_path": "/home/chengjie/tpc",
     "strax_chunk_length": 5000000000,
     "strax_fragment_length": 220,
     "baseline_dac_mode": "fit",
@@ -130,7 +130,7 @@ detector_from_path = run_mode['strax_output_path'].split('/')
 detector_from_path=[i for i in detector_from_path if i !='']
 
 if detector_from_path[0]!='home':
-	print('Not conventional path. Should be /home/users')
+	print('Not conventional path. Should be /home/<users>/tpc')
 	exit(0)
 
 if run_mode['detector'] not in detector_from_path:
