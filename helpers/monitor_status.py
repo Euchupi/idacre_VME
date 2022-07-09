@@ -15,4 +15,6 @@ while 1:
     docs= collection.find({}).sort("_id", -1).limit(1)
     for doc in docs:
         print("%s: Client %s reports status: %s rate: %.2f: %i"%(doc['_id'].generation_time, doc['host'], STATUS[doc['status']], doc['rate'],doc['buffer_length']))
+    
+    print(time.time())
     time.sleep(1)
