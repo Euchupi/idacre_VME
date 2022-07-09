@@ -23,6 +23,7 @@ db = client[database]
 # 8-status
 # 9-system_monitor
 
+#Basically , the control and options collections are the most important part of the collections . 
 
 # aggregate status
 db.create_collection('aggregate_status')
