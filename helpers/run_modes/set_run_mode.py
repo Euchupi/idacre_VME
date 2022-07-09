@@ -4,15 +4,15 @@ from bson.objectid import ObjectId
 import os
 
 
-
-client = MongoClient("mongodb://daq:%s@localhost:27017/admin"%os.environ["MONGO_PASSWORD"])
-#uri = "mongodb://admin:%s@127.0.0.1:27017/admin"%os.environ["MONGO_PASSWORD"]
-#client = pymongo.MongoClient(uri)
-db = client['xenonnt']
+# the run_mode data is stored at the options collection . 
+client = MongoClient("mongodb://192.168.1.88:27017)
+db = client['daq']
 collection = db['options']
 
+
+
 run_mode = {
-	"_id": ObjectId("5d30e9d05e13ab6116c43bf9"),
+	# the run_mode name must be unique 
     "name": "default_firmware_settings",
     "user": "zhut",
     "description": "Setup for default firmware",
