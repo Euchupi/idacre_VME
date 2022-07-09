@@ -9,7 +9,6 @@ client = MongoClient("mongodb://192.168.1.88:27017)
 db = client['daq']
 collection = db['options']
 
-#RelicsDAQ
 
 
 run_mode = {
@@ -34,10 +33,7 @@ run_mode = {
     [
         {"crate": 0, "link": 4, "board": 165,
             "vme_address": "FFFF0000", "type": "V1724", "host": "fdaq00_reader_7"},
-			#
     ],
-	
-	# The registers will be set to 
     "registers" : [
 		{
 			"comment" : "board reset register",
