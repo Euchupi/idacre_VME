@@ -15,7 +15,7 @@ run_mode = {
 	# the run_mode name must be unique 
     "name": "default_firmware_settings",
     "user": "chengjie",
-    "description": "Setup for default firmware",
+    "description": "V1725_number_0",
     "detector" : "tpc",
 	"detectors": {"detector" : "tpc",
 				  "hostname" : "RelicsDAQ",
