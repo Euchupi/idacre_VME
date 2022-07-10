@@ -187,6 +187,6 @@ db.system_monitor.create_index('time', expireAfterSeconds=3*24*3600)
 db.system_monitor.create_index([('host', 1), ('_id', -1)])
 
 
-with open("/root/daq_database_collections.txt","w") as f : 
+with open("/home/data/debug/daq_database_collections.txt","w") as f : 
     print("daq database Collections{}".format(db.list_collection_names()),file=f)
 
