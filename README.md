@@ -1,3 +1,5 @@
+This redax is modified based on the official redax software  , adding more subscripts and debug outputs to it . 
+
 # REDAX
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5882716.svg)](https://doi.org/10.5281/zenodo.5882716)
 
