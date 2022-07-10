@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <csignal>
 #include "DAQController.hh"
 #include "CControl_Handler.hh"
