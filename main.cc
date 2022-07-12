@@ -135,21 +135,23 @@ void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
     try{
       controller->StatusUpdate(&collection);
       // The function is within the controller.cc that to update the status stored in the db['status']
+      
     }catch(const std::exception &e){
       std::cout<<"Can't connect to DB to update."<<std::endl;
       std::cout<<e.what()<<std::endl;
-      /* 
-      run_b , e variables are very important , but I do not understand it yet . 
-      At least , we shall get some "Could not connect to the DB to update", 
-      it is quite strange that we even could not get the error output . 
+      /*  
+      Exceptions is to record the exception (errors ) that is defined via the std::exception originate from the try  . 
+      If we could not update the status via the Redax , we shall output the errors . 
       */
     }
     next_sec += dt;
     std::this_thread::sleep_until(next_sec);
   }
   std::cout<<"Status update returning\n";
+  // When the b_run is False , we shall also return some feedback . 
 }
 // UpdatesStatus function is to write the status into the database once per second .. 
+
 
 
 int PrintUsage() {
