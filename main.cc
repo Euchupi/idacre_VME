@@ -102,34 +102,55 @@ void SignalHandler(int signum) {
     return;
 }
 /*
- SignalHandler: If we have received the signal , and then the query procedure would be stopped .
- So if the redax is actually running , we shall get some cout within the command line .
+  It seems that the function is to stop the process via modifying b_run  ???? 
+  For the time being , i do not understand it . 
 */
 
 
 void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
     std::unique_ptr<DAQController>& controller) {
+  
   using namespace std::chrono;
+  //chrono is to process the time related functions .
+  
   auto client = pool->acquire();
   auto db = (*client)[dbname];
   auto collection = db["status"];
   auto next_sec = ceil<seconds>(system_clock::now());
-  //auto is to detect the type of the variable of the 
+  /*
+    pool is about the variable stored within computer's memory
+   "auto" is to detect the type of the variable automatically . 
+    We will write the status data into the client[dbname]['status']
+  */
+  
   const auto dt = seconds(1);
   std::this_thread::sleep_until(next_sec);
+  /*
+  :: Scope operator is to define the function namespace 
+  We would only update the status of the system once per second . 
+  */
+  
   while (b_run == true) {
+    // I think it is important to undertand the b_run now...
     try{
       controller->StatusUpdate(&collection);
+      // The function is within the controller.cc that to update the status stored in the db['status']
     }catch(const std::exception &e){
       std::cout<<"Can't connect to DB to update."<<std::endl;
       std::cout<<e.what()<<std::endl;
+      /* 
+      run_b , e variables are very important , but I do not understand it yet . 
+      At least , we shall get some "Could not connect to the DB to update", 
+      it is quite strange that we even could not get the error output . 
+      */
     }
     next_sec += dt;
     std::this_thread::sleep_until(next_sec);
   }
   std::cout<<"Status update returning\n";
 }
-// UpdatesStatus function is to 
+// UpdatesStatus function is to write the status into the database once per second .. 
+
 
 int PrintUsage() {
   std::cout<<"Welcome to redax\nAccepted command-line arguments:\n"
