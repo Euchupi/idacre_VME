@@ -4,8 +4,15 @@
 #include <thread>
 #include <unistd.h>
 #include <chrono>
+
+
 #include <thread>
 #include <atomic>
+/* 
+Atomic library defines a type called atomic so that we could handle it multithreading 
+(For example ,  the int64 running on a 32bits machine )
+*/
+
 #include <getopt.h>
 
 #include "DAQController.hh"
@@ -28,16 +35,20 @@
 #ifndef REDAX_BUILD_COMMIT
 #define REDAX_BUILD_COMMIT "unknown"
 #endif
-//
+// REDAX_Build_commit means that whether or not the build has been committed 
 
 std::atomic_bool b_run = true;
+// Define
+
 std::string hostname = "";
+// hostname is set to null by default 
 
 void SignalHandler(int signum) {
     std::cout << "\nReceived signal "<<signum<<std::endl;
     b_run = false;
     return;
 }
+// SignalHandler: If we have received the signal , and then the query procedure would be stopped 
 
 void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
     std::unique_ptr<DAQController>& controller) {
@@ -60,6 +71,7 @@ void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
   }
   std::cout<<"Status update returning\n";
 }
+// UpdatesStatus function is to 
 
 int PrintUsage() {
   std::cout<<"Welcome to redax\nAccepted command-line arguments:\n"
