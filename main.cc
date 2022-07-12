@@ -71,7 +71,11 @@ These header files could be installed via the mongocxx-driver downloaded from th
 #define REDAX_BUILD_COMMIT "unknown"
 #endif
 // REDAX_Build_commit means that whether or not the build has been committed 
-
+int PrintVersion() {
+  std::cout << "Redax commit " << REDAX_BUILD_COMMIT << "\n";
+  return 0;
+}
+// PrintVersion is to output the version of the redax (usage not found yet ..)
 
 
 
@@ -97,7 +101,10 @@ void SignalHandler(int signum) {
     b_run = false;
     return;
 }
-// SignalHandler: If we have received the signal , and then the query procedure would be stopped 
+/*
+ SignalHandler: If we have received the signal , and then the query procedure would be stopped .
+ So if the redax is actually running , we shall get some cout within the command line .
+*/
 
 
 void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
@@ -107,6 +114,7 @@ void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
   auto db = (*client)[dbname];
   auto collection = db["status"];
   auto next_sec = ceil<seconds>(system_clock::now());
+  //auto is to detect the type of the variable of the 
   const auto dt = seconds(1);
   std::this_thread::sleep_until(next_sec);
   while (b_run == true) {
@@ -137,11 +145,16 @@ int PrintUsage() {
     << "\n";
   return 1;
 }
+// Printusage is to output the user manual of the sofware . 
 
-int PrintVersion() {
-  std::cout << "Redax commit " << REDAX_BUILD_COMMIT << "\n";
-  return 0;
-}
+
+
+
+
+
+
+
+
 
 int main(int argc, char** argv){
   // Need to create a mongocxx instance and it must exist for
