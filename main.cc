@@ -1,16 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <csignal>
-#include "DAQController.hh"
-#include "CControl_Handler.hh"
 #include <thread>
 #include <unistd.h>
-#include "MongoLog.hh"
-#include "Options.hh"
 #include <chrono>
 #include <thread>
 #include <atomic>
 #include <getopt.h>
+
+#include "DAQController.hh"
+#include "CControl_Handler.hh"
+#include "MongoLog.hh"
+#include "Options.hh"
+//The most important c source files are the DAQControl , CControl , MongoLog , Options 
 
 #include <mongocxx/collection.hpp>
 #include <mongocxx/instance.hpp>
@@ -20,10 +22,13 @@
 #include <mongocxx/database.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/pool.hpp>
+//MongoCXX is to write the files into the mongo database 
+//Bson is a useful file format 
 
 #ifndef REDAX_BUILD_COMMIT
 #define REDAX_BUILD_COMMIT "unknown"
 #endif
+//
 
 std::atomic_bool b_run = true;
 std::string hostname = "";
