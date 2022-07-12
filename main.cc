@@ -1,47 +1,96 @@
 #include <iostream>
 #include <fstream>
-#include <csignal>
-#include <thread>
-#include <unistd.h>
-#include <chrono>
+/* 
+iostream and fstream is to output the variables 
+sudo apt install libcxxtools-dev , dev is short for developper
+*/
 
+#include <csignal>
+/*
+csingal library is to handle the basic signal functions 
+*/
+
+#include <unistd.h>
+/*
+unistd.h is to handle the API between the redax and the POSIX (Linux) 
+*/
+
+#include <getopt.h>
+/*
+getopt is to get the string from the command line 
+*/
+
+#include <chrono>
+/*
+Chrono Library is to log the time / date information just like the time module of Python 
+*/
 
 #include <thread>
 #include <atomic>
 /* 
-Atomic library defines a type called atomic so that we could handle it multithreading 
+The thread library is to allow building multiple threads softwares . 
+Atomic library defines a type called atomic so that we could handle it multithreading .
 (For example ,  the int64 running on a 32bits machine )
+In principle , we should always define the global variables via the atomic library's atomic type . 
 */
-
-#include <getopt.h>
 
 #include "DAQController.hh"
 #include "CControl_Handler.hh"
 #include "MongoLog.hh"
 #include "Options.hh"
-//The most important c source files are the DAQControl , CControl , MongoLog , Options 
+/*
+The most important c source files of redax are the DAQControl , CControl , MongoLog , Options 
+*/
 
 #include <mongocxx/collection.hpp>
 #include <mongocxx/instance.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/json.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/pool.hpp>
-//MongoCXX is to write the files into the mongo database 
-//Bson is a useful file format 
+/*
+MongoCXX is to write the files into the mongo database 
+uri - client - instance - database - collectionis the data structure of the mongodb 
+The pool is about the basic types of the mongo database . 
+These header files could be installed via the mongocxx-driver downloaded from the mongo official website . 
+*/
+
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
+//Bson is a useful file format mainly used by the mongodb . 
+
+
+
+
+
+
+
+
 
 #ifndef REDAX_BUILD_COMMIT
 #define REDAX_BUILD_COMMIT "unknown"
 #endif
 // REDAX_Build_commit means that whether or not the build has been committed 
 
+
+
+
+
+
+
 std::atomic_bool b_run = true;
-// Define
+// Define an atomic variable called the b_run 
 
 std::string hostname = "";
 // hostname is set to null by default 
+
+
+
+
+
+
+
+
 
 void SignalHandler(int signum) {
     std::cout << "\nReceived signal "<<signum<<std::endl;
@@ -49,6 +98,7 @@ void SignalHandler(int signum) {
     return;
 }
 // SignalHandler: If we have received the signal , and then the query procedure would be stopped 
+
 
 void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
     std::unique_ptr<DAQController>& controller) {
