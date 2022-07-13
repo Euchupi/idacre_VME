@@ -187,7 +187,7 @@ fs::path MongoLog_nT::OutputDirectory(struct tm* date) {
   std::sprintf(temp1,"%02d",date->tm_mon+1);
   std::sprintf(temp2,"%02d",date->tm_mday);
   
-  std::sprintf(temp, "%d%d.%d%d", int(temp1[0])-int('0'),int(temp1[1])-int('0'),int(temp2[0])-int('0'),int(temp2[1])-int('0') );
+  std::sprintf(temp, "%c%c.%c%c", temp1[0],temp1[1],temp2[0],temp2[1] );
   return fOutputDir / std::to_string(date->tm_year+1900) / std::string(temp);
 }
 
