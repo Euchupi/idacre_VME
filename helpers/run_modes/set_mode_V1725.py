@@ -18,7 +18,7 @@ run_mode = {
     "description": "V1725_number_0",
     "detector" : "tpc",
 	"detectors": {"detector" : "tpc",
-				  "hostname" : "RelicsDAQ",
+				  "hostname" : "RelicsDAQ_reader_0",
 				  "active" : "true",
 				  "stop_after" : "600"}, # second
     "mongo_uri": "mongodb://192.168.1.88:27017",
@@ -35,7 +35,7 @@ run_mode = {
     "boards":
     [
         {"crate": 0, "link": 4, "board": 165,
-            "vme_address": "0", "type": "V1730", "host": "RelicsDAQ"},
+            "vme_address": "0", "type": "V1730", "host": "RelicsDAQ_reader_0"},
     ],
     "registers" : [
 		{
