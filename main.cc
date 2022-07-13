@@ -339,8 +339,11 @@ int main(int argc, char** argv){
   if (log_dir == "nT")
     fLog = std::make_shared<MongoLog_nT>(pool, dbname, hostname);
   else
+  {
     std::cout << "We are creating the shared mongo log pointer at" <<  log_dir << "\n" ;
     fLog = std::make_shared<MongoLog>(log_retention, pool, dbname, log_dir, hostname); 
+  }
+  
   if (fLog->Initialize()) {
     std::cout<<"Could not initialize logs!\n";
     exit(-1);
