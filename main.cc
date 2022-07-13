@@ -316,6 +316,7 @@ int main(int argc, char** argv){
   mongocxx::database db = (*client)[dbname];
   mongocxx::collection control = db["control"];
   mongocxx::collection opts_collection = db["options"];
+  
   /*
   Connection variables : 
   mongocxx::uri  , just the link of the mongo 
@@ -339,14 +340,20 @@ int main(int argc, char** argv){
     fLog = std::make_shared<MongoLog_nT>(pool, dbname, hostname);
   else
     fLog = std::make_shared<MongoLog>(log_retention, pool, dbname, log_dir, hostname);
+    cout << "We are creating the shared mongo log pointer at" <<  log_dir << "\n" ; 
   if (fLog->Initialize()) {
     std::cout<<"Could not initialize logs!\n";
     exit(-1);
   }
   // fLog is a shared pointer of the log files 
 
+
   //Options
   std::shared_ptr<Options> fOptions;
+  cout << "We are creating the shared mongo options pointer \n" ; 
+  // Options is a shared pointer of the options 
+  
+  
   
   // The DAQController object is responsible for passing commands to the
   // boards and tracking the status
@@ -356,6 +363,7 @@ int main(int argc, char** argv){
   else
     controller = std::make_unique<DAQController>(fLog, hostname);
   std::thread status_update(&UpdateStatus, pool, dbname, std::ref(controller));
+  // controller and recorder are different , 
 
   using namespace bsoncxx::builder::stream;
   // Sort oldest to newest
