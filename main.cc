@@ -455,14 +455,17 @@ int main(int argc, char** argv){
 	       // Can only arm if we're idle
 	       if(controller->status() == 0)
          {
+           //To arm the instruments , we have to stop the controllers first . 
            fLog->Entry(MongoLog::Local, "We are going to stop the controller. ");
 	         controller->Stop();
+           fLog->Entry(MongoLog::Local, "We have finished stopping the controller. ");
            // Get an override doc from the 'options_override' field if it exists
 	         std::string override_json = "";
 	         try
            {
 	         auto oopts = doc["options_override"].get_document().view();
 	         override_json = bsoncxx::to_json(oopts);
+           fLog->Entry(MongoLog::Local, "options_override works well  ");
 	         }
 	        catch(const std::exception &e)
           {
