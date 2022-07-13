@@ -158,7 +158,9 @@ void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
 
 
 int PrintUsage() {
-  std::cout<<"PrintUsage : Welcome to redax\nAccepted command-line arguments:\n"
+  std::cout<< "\n" 
+    << "PrintUsage : Welcome to redax\n"
+    << "Accepted command-line arguments:\n"
     << "--id <id number>: id number of this readout instance, required\n"
     << "--uri <mongo uri>: full MongoDB URI, required\n"
     << "--db <database name>: name of the database to use, default \"daq\"\n"
@@ -168,6 +170,7 @@ int PrintUsage() {
     << "--log-retention <value>: how many days to keep logfiles, default 7, 0 = forever\n"
     << "--help: print this message\n"
     << "--version: print version information and return\n"
+    << "real host name : host+__reader/cc__+id   "
     << "\n";
   return 1;
 }
