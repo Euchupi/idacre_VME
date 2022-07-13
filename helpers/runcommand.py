@@ -29,7 +29,7 @@ def insert_control(coll, args):
         "host": args.host,
         "user": os.getlogin(),
         "run_identifier": '%06i' % args.number,
-        "acknowledged": {"acknowledged."+h:0 for h in args.host},
+        "acknowledged": {"acknowledged."+h for h in args.host},
         "createdAt": datetime.datetime.now()
     }
     coll.insert_one(doc)
