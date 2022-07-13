@@ -8,11 +8,13 @@ sudo apt install libcxxtools-dev , dev is short for developper
 #include <csignal>
 /*
 csingal library is to handle the basic signal functions 
+void (*signal(int sig, void (*func)(int)))(int)
+int sig includes SIGABRT, SIGFPE,SIGILL , SIGINT , SIGSEGV, SIGTERM and will execute the func when the sig changes
 */
 
 #include <unistd.h>
 /*
-unistd.h is to handle the API between the redax and the POSIX (Linux) 
+unistd.h is to handle the API between the redax and the POSIX (Linux) , also related to the commandline args 
 */
 
 #include <getopt.h>
@@ -102,8 +104,9 @@ void SignalHandler(int signum) {
     return;
 }
 /*
+  Signum has many types of signum .   
   It seems that the function is to stop the process via modifying b_run  ???? 
-  For the time being , i do not understand it . 
+  If something went wrong or interrupted, and then the process would be stopped . 
 */
 
 
@@ -180,20 +183,34 @@ int PrintUsage() {
 
 
 int main(int argc, char** argv){
-  // Need to create a mongocxx instance and it must exist for
-  // the entirety of the program. So here seems good.
   mongocxx::instance instance{};
-
+  /*
+   Need to create a mongocxx instance and it must exist for the entirety of the program. So here seems good.
+  */
+  
+  
   signal(SIGINT, SignalHandler);
   signal(SIGTERM, SignalHandler);
+  /*
+  SIGINT: signal interrupt 
+  SIGTERM: signal terminate 
+  When the ptogram is interrupted or terminated , it will make sense . 
+  */
 
   std::string current_run_id="none", log_dir = "";
   std::string dbname = "daq", suri = "", sid = "";
   bool reader = false, cc = false;
+  // current_run_id , log_dir , dbname , suri , sid 
+  
   int log_retention = 7; // days, 0 = someone else's problem
   int c(0), opt_index;
+  // int c(0) means that c is set to 0 by default . 
+  
+  
   enum { arg_id, arg_uri, arg_db, arg_logdir, arg_reader, arg_cc,
     arg_retention, arg_help, arg_version };
+    
+    
   struct option longopts[] = {
     {"id", required_argument, 0, arg_id},
     {"uri", required_argument, 0, arg_uri},
@@ -206,6 +223,9 @@ int main(int argc, char** argv){
     {"version", no_argument, 0, arg_version},
     {0, 0, 0, 0}
   };
+  // arguments includes the id , uri , db , logdir, reader , cc , log-retention , help , version 
+  
+  
   while ((c = getopt_long(argc, argv, "", longopts, &opt_index)) != -1) {
     switch(c) {
       case arg_id:
