@@ -35,7 +35,7 @@ run_mode = {
     "boards":
     [
         {"crate": 0, "link": 4, "board": 165,
-            "vme_address": "0", "type": "V1730", "host": "RelicsDAQ_reader_0"},
+            "vme_address": "0", "type": "V1730", "host": "RelicsDAQ"},
     ],
     "registers" : [
 		{
