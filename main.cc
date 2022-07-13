@@ -99,7 +99,7 @@ std::string hostname = "";
 
 
 void SignalHandler(int signum) {
-    std::cout << "SingalHandler \nReceived signal "<<signum<<std::endl;
+    std::cout << "\n SingalHandler"  << "\nReceived signal "<<signum<<std::endl;
     b_run = false;
     return;
 }
@@ -343,6 +343,7 @@ int main(int argc, char** argv){
     std::cout<<"Could not initialize logs!\n";
     exit(-1);
   }
+  // fLog is a shared pointer of the log files 
 
   //Options
   std::shared_ptr<Options> fOptions;
