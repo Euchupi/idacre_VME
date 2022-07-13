@@ -393,90 +393,105 @@ int main(int argc, char** argv){
   
   using namespace std::chrono;
   // Main program loop. Scan the database and look for commands addressed to this hostname. 
+  
   while(b_run == true){
-    // Try to poll for commands
     try{
       auto qdoc = control.find_one_and_update(query.view(), update.view(), opts);
-      if (qdoc) {
-	// Get the command out of the doc
+      if (qdoc) 
+      {
+	      //If we found a doc from the database and then get the command out of the doc
         auto doc = qdoc->view();
-	std::string command = "";
-	std::string user = "";
-	try{
-	  command = (doc)["command"].get_utf8().value.to_string();
-	  user = (doc)["user"].get_utf8().value.to_string();
-	}
-	catch (const std::exception &e){
-	  fLog->Entry(MongoLog::Warning, "Received malformed command %s",
-			bsoncxx::to_json(doc).c_str());
-	}
-	fLog->Entry(MongoLog::Debug, "Found a doc with command %s", command.c_str());
+	      std::string command = "";
+	      std::string user = "";
+	      try
+        {
+	        command = (doc)["command"].get_utf8().value.to_string();
+	        user = (doc)["user"].get_utf8().value.to_string();
+	      }
+	      catch (const std::exception &e)
+        {
+	       fLog->Entry(MongoLog::Warning, "Received malformed command %s",
+			   bsoncxx::to_json(doc).c_str());
+         // If something went wrong , we shall also log it . 
+	      }
+	      fLog->Entry(MongoLog::Debug, "Found a doc with command %s", command.c_str());
         auto ack_time = system_clock::now();
-
-
-
-
-	// Process commands
-	if(command == "start"){
-	  if(controller->status() == 2) {
-	    if(controller->Start()!=0){
-	      continue;
-	    }
+        // Process commands
+        
+	      if(command == "start")
+        {
+	       if(controller->status() == 2) 
+         {
+	          if(controller->Start()!=0)
+            {
+	           continue;
+	          }
             auto now = system_clock::now();
             fLog->Entry(MongoLog::Local, "Ack to start took %i us",
                 duration_cast<microseconds>(now-ack_time).count());
-	  }
-	  else
-	    fLog->Entry(MongoLog::Debug, "Cannot start DAQ since not in ARMED state (%i)", controller->status());
-	}else if(command == "stop"){
-	  // "stop" is also a general reset command and can be called any time
-	  if(controller->Stop()!=0)
-	    fLog->Entry(MongoLog::Error,
-			  "DAQ failed to stop. Will continue clearing program memory.");
+	        }
+	        else
+	        fLog->Entry(MongoLog::Debug, "Cannot start DAQ since not in ARMED state (%i)", controller->status());
+	      }
+        else if(command == "stop")
+        {
+	      // "stop" is also a general reset command and can be called any time
+	       if(controller->Stop()!=0)
+	       fLog->Entry(MongoLog::Error,
+			   "DAQ failed to stop. Will continue clearing program memory.");
           auto now = system_clock::now();
           fLog->Entry(MongoLog::Local, "Ack to stop took %i us",
               duration_cast<microseconds>(now-ack_time).count());
           fLog->SetRunId(-1);
           fOptions.reset();
-	} else if(command == "arm"){
-	  // Can only arm if we're idle
-	  if(controller->status() == 0){
-	    controller->Stop();
-
-	    // Get an override doc from the 'options_override' field if it exists
-	    std::string override_json = "";
-	    try{
-	      auto oopts = doc["options_override"].get_document().view();
-	      override_json = bsoncxx::to_json(oopts);
-	    }
-	    catch(const std::exception &e){
-	    }
-	    // Mongocxx types confusing so passing json strings around
-            std::string mode = doc["mode"].get_utf8().value.to_string();
-            fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
-	    fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
+	      } 
+        else if(command == "arm")
+        {
+	       // Can only arm if we're idle
+	       if(controller->status() == 0)
+         {
+	         controller->Stop();
+           // Get an override doc from the 'options_override' field if it exists
+	         std::string override_json = "";
+	         try
+           {
+	         auto oopts = doc["options_override"].get_document().view();
+	         override_json = bsoncxx::to_json(oopts);
+	         }
+	        catch(const std::exception &e)
+          {
+	        }
+	        // Mongocxx types confusing so passing json strings around
+          std::string mode = doc["mode"].get_utf8().value.to_string();
+          fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
+	        fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
-            int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
-            fLog->SetRunId(fOptions->GetInt("number", -1));
-            fLog->Entry(MongoLog::Local, "Took %i ms to load config", dt);
-	    if(controller->Arm(fOptions) != 0){
-	      fLog->Entry(MongoLog::Error, "Failed to initialize electronics");
-	      controller->Stop();
-	    }else{
-	      fLog->Entry(MongoLog::Debug, "Initialized electronics");
+          int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
+          fLog->SetRunId(fOptions->GetInt("number", -1));
+          fLog->Entry(MongoLog::Local, "Took %i ms to load config", dt);
+	        if(controller->Arm(fOptions) != 0){
+	         fLog->Entry(MongoLog::Error, "Failed to initialize electronics");
+	         controller->Stop();
+	         }
+          else
+          {
+	        fLog->Entry(MongoLog::Debug, "Initialized electronics");
+	        }
+	      } // if status is ok
+	      else
+	       fLog->Entry(MongoLog::Warning, "Cannot arm DAQ while not 'Idle'");
 	    }
-	  } // if status is ok
-	  else
-	    fLog->Entry(MongoLog::Warning, "Cannot arm DAQ while not 'Idle'");
-	} else if (command == "quit") b_run = false;
+     else if (command == "quit") b_run = false;
       } // if doc
-    }catch(const std::exception &e){
+    }
+    catch(const std::exception &e)
+    {
       std::cout<<e.what()<<std::endl;
       std::cout<<"Can't connect to DB so will continue what I'm doing"<<std::endl;
     }
-
     std::this_thread::sleep_for(milliseconds(100));
   }
+  
   status_update.join();
   controller.reset();
   fOptions.reset();
