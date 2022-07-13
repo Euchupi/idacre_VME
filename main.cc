@@ -194,7 +194,7 @@ int main(int argc, char** argv){
   /*
   SIGINT: signal interrupt 
   SIGTERM: signal terminate 
-  When the ptogram is interrupted or terminated , it will make sense . 
+  When the program is interrupted or terminated , it will make sense . 
   */
 
   std::string current_run_id="none", log_dir = "";
@@ -226,6 +226,8 @@ int main(int argc, char** argv){
   // arguments includes the id , uri , db , logdir, reader , cc , log-retention , help , version 
   
   
+  
+  
   while ((c = getopt_long(argc, argv, "", longopts, &opt_index)) != -1) {
     switch(c) {
       case arg_id:
@@ -238,8 +240,11 @@ int main(int argc, char** argv){
         log_dir = optarg; break;
       case arg_reader:
         reader = true; break;
+      // If we have --reader command line , then the reader will be set true 
       case arg_cc:
         cc = true; break;
+      // If we have --cc command line  , then the cc will be set true 
+      // We could not set both the cc and reader true . 
       case arg_retention:
         log_retention = std::stoi(optarg); break;
       case arg_help:
@@ -252,10 +257,25 @@ int main(int argc, char** argv){
     }
   }
   if (suri == "" || sid == "") return PrintUsage();
+  // PrintUsage is to output the user manual of the Redax and then stop this software . 
+  // We need to specify the uri and id at the same time so that it could run . 
   if (reader == cc) {
     std::cout<<"Specify --reader XOR --cc\n";
     return 1;
   }
+  // By default , the reader and cc are all set to false . 
+ 
+  /*
+  argc is the number of the arguments 
+  argv is the content of the arguments , and then the argv[0] is the command itself .
+  optstring : the options we need , new:parameter .
+  -1 means the end of command line parameters . 
+  */
+
+
+
+
+
 
   // We will consider commands addressed to this PC's ID 
   const int HOST_NAME_MAX = 64; // should be #defined in unistd.h but isn't???
@@ -265,6 +285,22 @@ int main(int argc, char** argv){
   hostname+= (reader ? "_reader_" : "_controller_") + sid;
   PrintVersion();
   std::cout<<"Reader starting with ID: "<<hostname<<std::endl;
+  // The detailed hostname includes the hostname+_reader_+sid , not just the host name like the "RelicsDAQ"
+
+
+  /*
+  ./redax  --uri mongodb://192.168.1.88:27017 --logdir /home/data/TPC --id 0 --reader
+  Redax commit 67efe549e936b05d3dc2b4c6b4a6b7c91535d4b0
+  Reader starting with ID: RelicsDAQ_reader_0
+  Local file logging to /home/data/TPC
+  Logging to "/home/data/TPC/20220713_RelicsDAQ_reader_0.log"
+  
+  A typical start and output of the redax is like above ; 
+  The first line is about the redax commit and its version . 
+  The second line is about the redax hostname -- not only the hostname but also the reader and the run_id ; 
+  To every run_mode , the run id should be unique and constant . 
+  */
+
 
   // MongoDB Connectivity for control database. Bonus for later:
   // exception wrap the URI parsing and client connection steps
@@ -274,6 +310,12 @@ int main(int argc, char** argv){
   mongocxx::database db = (*client)[dbname];
   mongocxx::collection control = db["control"];
   mongocxx::collection opts_collection = db["options"];
+  /*
+  Connection variables : 
+    mongocxx::uri 
+    pool , just like the memory 
+    client - database - collections : control , options 
+  */
 
   // Logging
   std::shared_ptr<MongoLog> fLog;
