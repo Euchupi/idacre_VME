@@ -15,7 +15,7 @@ def main():
     parser.add_argument('--command', choices='check write arm stop start'.split(), required=True, help='The command')
     parser.add_argument('--number', type=int, default=0, help='Run number')
     parser.add_argument('--mode', help='Run mode', required=True)
-    parser.add_argument('--host', nargs='+', default=[os.uname()[1]], help="Hosts to issue to")
+    parser.add_argument('--host', nargs='+', default="RelicsDAQ_reader_0", help="Hosts to issue to")
 
     args = parser.parse_args()
     return args
