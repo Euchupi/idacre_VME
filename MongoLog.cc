@@ -6,6 +6,7 @@
 #define REDAX_BUILD_COMMIT "UNKNOWN"
 #endif
 
+// MongoLog is to log the file within the mongo 
 namespace fs=std::experimental::filesystem;
 
 MongoLog::MongoLog(int DeleteAfterDays, std::shared_ptr<mongocxx::pool>& pool, std::string dbname, std::string log_dir, std::string host) : 
@@ -182,7 +183,7 @@ int MongoLog::Entry(int priority, const std::string& message, ...){
 
 fs::path MongoLog_nT::OutputDirectory(struct tm* date) {
   char temp[6];
-  std::sprintf(temp, "%02d.%02d", date->tm_mon+1, date->tm_mday);
+  std::sprintf(temp, "%02d.%02d", int((date->tm_mon+1)/13), int(date->tm_mday/32));
   return fOutputDir / std::to_string(date->tm_year+1900) / std::string(temp);
 }
 
