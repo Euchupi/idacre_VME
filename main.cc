@@ -359,11 +359,15 @@ int main(int argc, char** argv){
   // boards and tracking the status
   std::unique_ptr<DAQController> controller;
   if (cc)
+  {
     std::cout<< "We are running the CControl_Handler\n" ; 
     controller = std::make_unique<CControl_Handler>(fLog, hostname);
+  }
   else
+  {
     std::cout<< "We are running the DAQController\n" ; 
     controller = std::make_unique<DAQController>(fLog, hostname);
+  }
   std::thread status_update(&UpdateStatus, pool, dbname, std::ref(controller));
   // controller and recorder are different , DAQController is to read the data and then transfer to the DAQ instruments. 
 
