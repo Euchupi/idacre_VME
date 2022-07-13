@@ -300,7 +300,7 @@ int main(int argc, char** argv){
   Local file logging to /home/data/TPC
   Logging to "/home/data/TPC/20220713_RelicsDAQ_reader_0.log"
   
-  A typical start and output of the redax is like above ; 
+  A typical start and original output of the redax is like above ; 
   The first line is about the redax commit and its version . 
   The second line is about the redax hostname -- not only the hostname but also the reader and the run_id ; 
   To every run_mode , the run id should be unique and constant . 
@@ -378,16 +378,21 @@ int main(int argc, char** argv){
 
 
   using namespace bsoncxx::builder::stream;
-  // Sort oldest to newest
   auto opts = mongocxx::options::find_one_and_update{};
   opts.sort(document{} << "_id" << 1 << finalize);
   std::string ack_host = "acknowledged." + hostname;
+  std::cout << "options sorted by time \n"  ; 
+  // Sort oldest to newest
+  
   auto query = document{} << "host" << hostname << ack_host << 0 << finalize;
   auto update = document{} << "$currentDate" << open_document <<
     ack_host << true << close_document << finalize;
+  std::cout << "ack_host:" << ack_host << std::endl ; 
+  // The acknowledged host and the host only differs in the "acknowledged."
+  
+  
   using namespace std::chrono;
-  // Main program loop. Scan the database and look for commands addressed
-  // to this hostname. 
+  // Main program loop. Scan the database and look for commands addressed to this hostname. 
   while(b_run == true){
     // Try to poll for commands
     try{
@@ -407,6 +412,9 @@ int main(int argc, char** argv){
 	}
 	fLog->Entry(MongoLog::Debug, "Found a doc with command %s", command.c_str());
         auto ack_time = system_clock::now();
+
+
+
 
 	// Process commands
 	if(command == "start"){
