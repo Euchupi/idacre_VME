@@ -170,7 +170,7 @@ int PrintUsage() {
     << "--log-retention <value>: how many days to keep logfiles, default 7, 0 = forever\n"
     << "--help: print this message\n"
     << "--version: print version information and return\n"
-    << "real host name : host+__reader/cc__+id   "
+    << "Notice : real host name : host+__reader/cc__+id   "
     << "\n";
   return 1;
 }
