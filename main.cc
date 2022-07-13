@@ -340,7 +340,7 @@ int main(int argc, char** argv){
     fLog = std::make_shared<MongoLog_nT>(pool, dbname, hostname);
   else
     fLog = std::make_shared<MongoLog>(log_retention, pool, dbname, log_dir, hostname);
-    cout << "We are creating the shared mongo log pointer at" <<  log_dir << "\n" ; 
+    std::cout << "We are creating the shared mongo log pointer at" <<  log_dir << "\n" ; 
   if (fLog->Initialize()) {
     std::cout<<"Could not initialize logs!\n";
     exit(-1);
@@ -350,7 +350,7 @@ int main(int argc, char** argv){
 
   //Options
   std::shared_ptr<Options> fOptions;
-  cout << "We are creating the shared mongo options pointer \n" ; 
+  std::cout << "We are creating the shared mongo options pointer \n" ; 
   // Options is a shared pointer of the options 
   
   
