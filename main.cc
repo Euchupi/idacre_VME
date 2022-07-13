@@ -74,7 +74,7 @@ These header files could be installed via the mongocxx-driver downloaded from th
 #endif
 // REDAX_Build_commit means that whether or not the build has been committed 
 int PrintVersion() {
-  std::cout << "Redax commit " << REDAX_BUILD_COMMIT << "\n";
+  std::cout << "PrintVersion: Redax commit " << REDAX_BUILD_COMMIT << "\n";
   return 0;
 }
 // PrintVersion is to output the version of the redax (usage not found yet ..)
@@ -99,7 +99,7 @@ std::string hostname = "";
 
 
 void SignalHandler(int signum) {
-    std::cout << "\nReceived signal "<<signum<<std::endl;
+    std::cout << "SingalHandler \nReceived signal "<<signum<<std::endl;
     b_run = false;
     return;
 }
@@ -158,7 +158,7 @@ void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
 
 
 int PrintUsage() {
-  std::cout<<"Welcome to redax\nAccepted command-line arguments:\n"
+  std::cout<<"PrintUsage : Welcome to redax\nAccepted command-line arguments:\n"
     << "--id <id number>: id number of this readout instance, required\n"
     << "--uri <mongo uri>: full MongoDB URI, required\n"
     << "--db <database name>: name of the database to use, default \"daq\"\n"
@@ -236,6 +236,7 @@ int main(int argc, char** argv){
         suri = optarg; break;
       case arg_db:
         dbname = optarg; break;
+      // dbname is set to daq by default 
       case arg_logdir:
         log_dir = optarg; break;
       case arg_reader:
@@ -247,6 +248,7 @@ int main(int argc, char** argv){
       // We could not set both the cc and reader true . 
       case arg_retention:
         log_retention = std::stoi(optarg); break;
+      // for the time being , I do not know the log_retention meaning 
       case arg_help:
         return PrintUsage();
       case arg_version:
@@ -306,16 +308,27 @@ int main(int argc, char** argv){
   // exception wrap the URI parsing and client connection steps
   mongocxx::uri uri(suri.c_str());
   auto pool = std::make_shared<mongocxx::pool>(uri);
+  // pool is a shared variable to log the uri of the instance , and we could read it via the pool.acquire()
   auto client = pool->acquire();
   mongocxx::database db = (*client)[dbname];
   mongocxx::collection control = db["control"];
   mongocxx::collection opts_collection = db["options"];
   /*
   Connection variables : 
-    mongocxx::uri 
-    pool , just like the memory 
-    client - database - collections : control , options 
+  mongocxx::uri  , just the link of the mongo 
+  Now , the client is shared by the memory via the make_shared variable --pool .  
+  client - database - collections : control , options 
   */
+  
+  /* 
+  pool : a memory shared uri address 
+  db : the database to be used 
+  control ; the contorl collection of the database 
+  opts_collection : the options collection of the database . 
+  */
+
+
+
 
   // Logging
   std::shared_ptr<MongoLog> fLog;
