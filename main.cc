@@ -419,6 +419,7 @@ int main(int argc, char** argv){
 	      }
 	      fLog->Entry(MongoLog::Debug, "Found a doc with command %s", command.c_str());
         auto ack_time = system_clock::now();
+        // It seems that we have already got the file .
         // Process commands
         
 	      if(command == "start")
@@ -436,6 +437,7 @@ int main(int argc, char** argv){
 	        else
 	        fLog->Entry(MongoLog::Debug, "Cannot start DAQ since not in ARMED state (%i)", controller->status());
 	      }
+        
         else if(command == "stop")
         {
 	      // "stop" is also a general reset command and can be called any time
@@ -453,6 +455,7 @@ int main(int argc, char** argv){
 	       // Can only arm if we're idle
 	       if(controller->status() == 0)
          {
+           fLog->Entry(MongoLog::Local, "We are going to stop the controller. "
 	         controller->Stop();
            // Get an override doc from the 'options_override' field if it exists
 	         std::string override_json = "";
