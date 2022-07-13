@@ -394,9 +394,12 @@ int main(int argc, char** argv){
   using namespace std::chrono;
   // Main program loop. Scan the database and look for commands addressed to this hostname. 
   
-  while(b_run == true){
-    try{
+  while(b_run == true)
+  {
+    try
+    {
       auto qdoc = control.find_one_and_update(query.view(), update.view(), opts);
+      // The find_one_and_update includes the query and the updates from the opts (option collection)
       if (qdoc) 
       {
 	      //If we found a doc from the database and then get the command out of the doc
