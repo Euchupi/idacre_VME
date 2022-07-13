@@ -455,7 +455,7 @@ int main(int argc, char** argv){
 	       // Can only arm if we're idle
 	       if(controller->status() == 0)
          {
-           fLog->Entry(MongoLog::Local, "We are going to stop the controller. "
+           fLog->Entry(MongoLog::Local, "We are going to stop the controller. ");
 	         controller->Stop();
            // Get an override doc from the 'options_override' field if it exists
 	         std::string override_json = "";
