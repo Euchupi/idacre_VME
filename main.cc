@@ -481,11 +481,10 @@ int main(int argc, char** argv){
           std::cout <<  "Main:hostname" << hostname << std::endl ;
           std::cout <<  "Main:options_name" << mode << std::endl ;
           
-          char  new[100]; 
-          std::sprintf( new, "Main:Database name %s" , dbname )
+          char new[100]; 
+          std::sprintf(new, "Main:Database name %s" , dbname )
           fLog->Entry(MongoLog::Local,  new ) ;
           
-
 	        
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
           auto gOptions= Options(fLog, mode, hostname, &opts_collection,pool, dbname, override_json);
