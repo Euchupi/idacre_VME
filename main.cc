@@ -478,7 +478,8 @@ int main(int argc, char** argv){
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
 	        
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
-          fOptions = std::make_shared<Options::Options>(fLog, mode, hostname, &opts_collection,
+          gOptions= Options::Options(fLog, mode, hostname, &opts_collection,pool, dbname, override_json);
+          fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
             //This command does not work well ... 
             //But if we successfully debug it , everything will be ok . 
