@@ -68,19 +68,24 @@ struct fax_options_t {
 
 class MongoLog;
 
+
+
 class Options{
 
 public:
   Options(std::shared_ptr<MongoLog>&, std::string, std::string, mongocxx::collection*, std::shared_ptr<mongocxx::pool>&, std::string, std::string);
   ~Options();
+  //Basic initial functions ; 
 
   int GetInt(std::string, int=-1);
   long int GetLongInt(std::string, long int=-1);
   double GetDouble(std::string, double=-1);
+  
   std::string GetString(std::string, std::string="");
   std::string GetNestedString(std::string, std::string="");
   std::string Hostname() {return fHostname;}
   std::string Detector() {return fDetector;}
+  
 
   std::vector<BoardType> GetBoards(std::string);
   std::vector<RegisterType> GetRegisters(int, bool=false);
@@ -99,6 +104,8 @@ public:
 
 private:
   int Load(std::string, mongocxx::collection*, std::string);
+  //Basic function : Load 
+  
   bsoncxx::document::view bson_options;
   bsoncxx::document::value *bson_value;
   std::shared_ptr<MongoLog> fLog;
@@ -110,5 +117,8 @@ private:
   mongocxx::collection fDAC_collection;
   bsoncxx::document::value fDAC_cache;
 };
+/*
+In general , the option functions includes the important initialization function and the Load function and some other useful functions . 
+*/
 
 #endif

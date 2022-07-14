@@ -20,8 +20,8 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   // This time , we could not initialize the class .
   if(Load(options_name, opts_collection, override_opts)!=0)
     throw std::runtime_error("Can't initialize options class");
+  // The Load function is defined within the class options 
   
-  /*
   fLog->Entry(MongoLog::Local, "baseline_dac_mode %s",GetString("baseline_dac_mode")  ) ;
   fLog->Entry(MongoLog::Local, "baseline_falloback_mode %s",GetString("baseline_fallback_mode") ) ;
   
@@ -49,7 +49,6 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
     }
     fLog->Entry(MongoLog::Local, "Loaded cached baselines from run %i", ref);
   }
-  */
 }
 
 Options::~Options(){

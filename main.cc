@@ -344,7 +344,7 @@ int main(int argc, char** argv){
     fLog = std::make_shared<MongoLog>(log_retention, pool, dbname, log_dir, hostname); 
     //Initialize one mongolog pointer . 
   }
-  // However , I think we could use the reload to avoid this if ...
+  // However , I think we could use the reload to avoid this "if" ...
   
   if (fLog->Initialize()) {
     std::cout<<"Could not initialize logs!\n";
