@@ -481,7 +481,7 @@ int main(int argc, char** argv){
           fLog->Entry(MongoLog::Local, "Main:We are now defining an options type") ;
           fLog->Entry(MongoLog::Local, "Main:Database name %s", dbname) ;
           fLog->Entry(MongoLog::Local, "Main:hostname %s", hostname) ;
-          fLog->Entry(MongoLog::Local, "Main:options_name %s", options_name) ;
+          fLog->Entry(MongoLog::Local, "Main:options_name %s", mode) ;
 	        
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
           auto gOptions= Options(fLog, mode, hostname, &opts_collection,pool, dbname, override_json);
