@@ -342,7 +342,9 @@ int main(int argc, char** argv){
   {
     std::cout << "We are creating the shared mongo log pointer at" <<  log_dir << "\n" ;
     fLog = std::make_shared<MongoLog>(log_retention, pool, dbname, log_dir, hostname); 
+    //Initialize one mongolog pointer . 
   }
+  // However , I think we could use the reload to avoid this if ...
   
   if (fLog->Initialize()) {
     std::cout<<"Could not initialize logs!\n";
@@ -450,6 +452,8 @@ int main(int argc, char** argv){
           fLog->SetRunId(-1);
           fOptions.reset();
 	      } 
+        
+        
         else if(command == "arm")
         {
 	       // Can only arm if we're idle
@@ -476,10 +480,9 @@ int main(int argc, char** argv){
           // Mongocxx types confusing so passing json strings around
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
-                  
+          
+          
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
-          auto gOptions= Options(fLog, mode, hostname, &opts_collection,pool, dbname, override_json);
-          std::cout << "gOptions could be created \n "  ;
           fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
             //This command does not work well ... 
@@ -499,7 +502,9 @@ int main(int argc, char** argv){
 	        fLog->Entry(MongoLog::Debug, "Initialized electronics");
 	        }
 	      } // if status is ok
-	      else
+	      
+        
+        else
 	       fLog->Entry(MongoLog::Warning, "Cannot arm DAQ while not 'Idle'");
 	    }
      else if (command == "quit") b_run = false;

@@ -1,5 +1,6 @@
 #include "MongoLog.hh"
 #include <iostream>
+#include <fstream>
 #include <bsoncxx/builder/stream/document.hpp>
 
 #ifndef REDAX_BUILD_COMMIT
@@ -18,6 +19,7 @@ MongoLog::MongoLog(int DeleteAfterDays, std::shared_ptr<mongocxx::pool>& pool, s
   fOutputDir = log_dir;
   fDB = (*fClient)[dbname];
   fCollection = fDB["log"];
+  // The default collection is the log collection . 
 
   std::cout << "Local file logging to " << log_dir << std::endl;;
   fFlush = true;
@@ -33,6 +35,7 @@ MongoLog::~MongoLog(){
   fFlushThread.join();
   fOutfile.close();
 }
+// the ~ function would be executed automatically when the main function is out of its domain 
 
 std::tuple<struct tm, int> MongoLog::Now() {
   using namespace std::chrono;

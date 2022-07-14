@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cmath>
 #include <numeric>
+#include <iostream>
 #include <fstream>
 
 #include <bsoncxx/builder/stream/document.hpp>
