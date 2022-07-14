@@ -19,8 +19,8 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   
   fLog->Entry(MongoLog::Local, "We are now defining an options type") ;
   fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
-  fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
-  fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
+  fLog->Entry(MongoLog::Local, "hostname %s", hostname) ;
+  fLog->Entry(MongoLog::Local, "options_name %s", options_name) ;
   fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
   
   // This time , we could not initialize the class .
