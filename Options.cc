@@ -18,8 +18,10 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   bson_value = NULL;
   
   // This time , we could not initialize the class .
+  /*
   if(Load(options_name, opts_collection, override_opts)!=0)
     throw std::runtime_error("Can't initialize options class");
+  */
   // The Load function is defined within the class options 
   
   std::cout << "baseline_dac_mode" << std::endl ; 
