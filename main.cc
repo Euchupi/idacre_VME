@@ -464,8 +464,9 @@ int main(int argc, char** argv){
 	         try
            {
 	         auto oopts = doc["options_override"].get_document().view();
+           std::string str_oopts =doc["options_override"].get_utf8().value.to_string();
 	         override_json = bsoncxx::to_json(oopts);
-           fLog->Entry(MongoLog::Local, "options_override works well  ");
+           fLog->Entry(MongoLog::Local, "options_override works well %s  " , str_oopts);
 	         }
 	        catch(const std::exception &e)
           {
@@ -475,6 +476,7 @@ int main(int argc, char** argv){
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
 	        fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
+            //This command does not work well ... 
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
           fLog->SetRunId(fOptions->GetInt("number", -1));
