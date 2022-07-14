@@ -22,6 +22,8 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
     throw std::runtime_error("Can't initialize options class");
   // The Load function is defined within the class options 
   
+  std::cout << "baseline_dac_mode" << std::endl ; 
+  std::cout << "baseline_dac_mode" << GetString("baseline_dac_mode") << std::endl ; 
   fLog->Entry(MongoLog::Local, "baseline_dac_mode %s",GetString("baseline_dac_mode")  ) ;
   fLog->Entry(MongoLog::Local, "baseline_falloback_mode %s",GetString("baseline_fallback_mode") ) ;
   

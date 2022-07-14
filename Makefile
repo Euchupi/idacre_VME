@@ -13,7 +13,7 @@ LDFLAGS = -lCAENVME -lstdc++fs -llz4 -lblosc $(shell pkg-config --libs libmongoc
 
 SOURCES_SLAVE = CControl_Handler.cc DAQController.cc f1724.cc main.cc MongoLog.cc \
 				Options.cc StraxFormatter.cc V1495.cc V1724.cc V1724_MV.cc \
-				V1730.cc V2718.cc f2718.cc V1495_tpc.cc
+				V1730.cc V2718.cc f2718.cc V1495_tpc.cc V1725.cc
 OBJECTS_SLAVE = $(SOURCES_SLAVE:%.cc=%.o)
 DEPS_SLAVE = $(OBJECTS_SLAVE:%.o=%.d)
 EXEC_SLAVE = redax
@@ -45,4 +45,6 @@ clean:
 	rm -f $(EXEC_SLAVE)
 
 include $(DEPS_SLAVE)
+
+# The makefile is quite simple .. 
 

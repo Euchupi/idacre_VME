@@ -487,9 +487,8 @@ int main(int argc, char** argv){
 			      pool, dbname, override_json);
             //This command does not work well ... 
             //But if we successfully debug it , everything will be ok . 
-            
-            
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
+          
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
           fLog->SetRunId(fOptions->GetInt("number", -1));
           fLog->Entry(MongoLog::Local, "Took %i ms to load config", dt);
