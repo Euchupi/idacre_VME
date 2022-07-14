@@ -456,6 +456,7 @@ int main(int argc, char** argv){
         
         else if(command == "arm")
         {
+         std::string override_json = "";
 	       // Can only arm if we're idle
 	       if(controller->status() == 0)
          {
@@ -464,7 +465,7 @@ int main(int argc, char** argv){
 	         controller->Stop();
            fLog->Entry(MongoLog::Local, "We have finished stopping the controller. ");
            // Get an override doc from the 'options_override' field if it exists
-	         std::string override_json = "";
+	         override_json = "";
 	         try
            {
 	         auto oopts = doc["options_override"].get_document().view();
@@ -480,6 +481,7 @@ int main(int argc, char** argv){
           // Mongocxx types confusing so passing json strings around
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
+          
           
           
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
