@@ -476,16 +476,7 @@ int main(int argc, char** argv){
           // Mongocxx types confusing so passing json strings around
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
-          
-          std::cout <<  "Main:Database name" << dbname << std::endl ;
-          std::cout <<  "Main:hostname" << hostname << std::endl ;
-          std::cout <<  "Main:options_name" << mode << std::endl ;
-          
-          char new_dbname[100]; 
-          std::sprintf(new_dbname, "Main:Database name %s" , dbname );
-          fLog->Entry(MongoLog::Local,  new_dbname ) ;
-          
-	        
+                  
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
           auto gOptions= Options(fLog, mode, hostname, &opts_collection,pool, dbname, override_json);
           std::cout << "gOptions could be created \n "  ;
