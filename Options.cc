@@ -18,7 +18,10 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   bson_value = NULL;
   
   fLog->Entry(MongoLog::Local, "We are now defining an options type") ;
-  
+  fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
+  fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
+  fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
+  fLog->Entry(MongoLog::Local, "Database name %s", dbname) ;
   
   // This time , we could not initialize the class .
   if(Load(options_name, opts_collection, override_opts)!=0)
