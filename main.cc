@@ -466,18 +466,22 @@ int main(int argc, char** argv){
 	         auto oopts = doc["options_override"].get_document().view();
            std::string str_oopts =doc["options_override"].get_utf8().value.to_string();
 	         override_json = bsoncxx::to_json(oopts);
-           fLog->Entry(MongoLog::Local, "options_override works well %s  " , str_oopts);
+           fLog->Entry(MongoLog::Local, "We have got the override_opts %s  " , str_oopts);
 	         }
 	        catch(const std::exception &e)
           {
-            fLog->Entry(MongoLog::Local, "We have not get the override_opts   " );
+            fLog->Entry(MongoLog::Local, "We did not get the override_opts " );
 	        }
-	        // Mongocxx types confusing so passing json strings around
+	        
+          // Mongocxx types confusing so passing json strings around
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
-	        fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
+	        
+          fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
+          fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
             //This command does not work well ... 
+            //But if we successfully debug it , everything will be ok . 
             
             
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
