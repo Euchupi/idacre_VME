@@ -477,6 +477,9 @@ int main(int argc, char** argv){
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
           
+          std::cout <<  "Main:Database name" << dbname << std::endl ;
+          std::cout <<  "Main:hostname" << hostname << std::endl ;
+          std::cout <<  "Main:options_name" << mode << std::endl ;
           
           fLog->Entry(MongoLog::Local, "Main:We are now defining an options type") ;
           fLog->Entry(MongoLog::Local, "Main:Database name %s", dbname) ;
