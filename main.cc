@@ -470,6 +470,7 @@ int main(int argc, char** argv){
 	         }
 	        catch(const std::exception &e)
           {
+            fLog->Entry(MongoLog::Local, "We have not get the override_opts  " , str_oopts);
 	        }
 	        // Mongocxx types confusing so passing json strings around
           std::string mode = doc["mode"].get_utf8().value.to_string();
