@@ -18,7 +18,8 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   
   fLog->Entry(MongoLog::Local, "We are now defining an options type") ;
   
-  /*if(Load(options_name, opts_collection, override_opts)!=0)
+  /*
+  if(Load(options_name, opts_collection, override_opts)!=0)
     throw std::runtime_error("Can't initialize options class");
   */
   
