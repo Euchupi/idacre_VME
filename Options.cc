@@ -17,6 +17,10 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   
   bson_value = NULL;
   
+  std::cout << "ready baseline_dac_mode1" << std::endl ; 
+  std::cout << "ready baseline_dac_mode2" << std::endl ;
+  std::cout << "ready baseline_dac_mode3" << std::endl ;  
+  
   // This time , we could not initialize the class .
   /*
   if(Load(options_name, opts_collection, override_opts)!=0)
