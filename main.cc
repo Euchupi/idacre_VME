@@ -482,7 +482,7 @@ int main(int argc, char** argv){
           std::cout <<  "Main:options_name" << mode << std::endl ;
           
           char new_dbname[100]; 
-          std::sprintf(new_dbname, "Main:Database name %s" , dbname )
+          std::sprintf(new_dbname, "Main:Database name %s" , dbname );
           fLog->Entry(MongoLog::Local,  new_dbname ) ;
           
 	        
