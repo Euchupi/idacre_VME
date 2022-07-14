@@ -478,6 +478,8 @@ int main(int argc, char** argv){
 	        fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
             //This command does not work well ... 
+            
+            
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
           fLog->SetRunId(fOptions->GetInt("number", -1));

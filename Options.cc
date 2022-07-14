@@ -15,21 +15,29 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
     fLog(log), fHostname(hostname), fPool(pool), fClient(pool->acquire()), 
     fDAC_cache(bsoncxx::document::view()) {
   bson_value = NULL;
+  
+  fLog->Entry(MongoLog::Local, "We are now defining an options type") ;
+  
   if(Load(options_name, opts_collection, override_opts)!=0)
     throw std::runtime_error("Can't initialize options class");
+  
   fDB = (*fClient)[dbname];
   fDAC_collection = fDB["dac_calibration"];
   int ref = -1;
   bool load_ref = GetString("baseline_dac_mode") == "cached" || GetNestedString("baseline_dac_mode."+fDetector) == "cached" || GetString("baseline_fallback_mode") == "cached";
+  
   if (load_ref && ((ref = std::max(GetInt("baseline_reference_run"), GetNestedInt("baseline_reference_run."+fDetector))) == -1)) {
     // -1 is default return
     fLog->Entry(MongoLog::Error, "Please specify a reference run to use cached baselines");
     throw std::runtime_error("Config invalid");
   }
-  if (load_ref && (ref != -1)) {
+  
+  if (load_ref && (ref != -1)) 
+  {
     auto doc = fDAC_collection.find_one(bsoncxx::builder::stream::document{} << "run" << ref << bsoncxx::builder::stream::finalize);
     if (doc) fDAC_cache = *doc;
-    else {
+    else 
+    {
       fLog->Entry(MongoLog::Warning, "Could not load baseline reference run %i", ref);
       throw std::runtime_error("Can't load cached baselines");
     }
@@ -44,7 +52,8 @@ Options::~Options(){
   }
 }
 
-int Options::Load(std::string name, mongocxx::collection* opts_collection, std::string override_opts) {
+int Options::Load(std::string name, mongocxx::collection* opts_collection, std::string override_opts) 
+{
   using namespace bsoncxx::builder::stream;
   auto pl = mongocxx::pipeline();
   pl.match(document{} << "name" << name << finalize);
@@ -60,12 +69,16 @@ int Options::Load(std::string name, mongocxx::collection* opts_collection, std::
   pl.project(document{} << "subconfig" << 0 << finalize);
   if (override_opts != "")
     pl.add_fields(bsoncxx::from_json(override_opts));
-  for (auto doc : opts_collection->aggregate(pl)) {
+  for (auto doc : opts_collection->aggregate(pl)) 
+  {
     bson_value = new bsoncxx::document::value(doc);
     bson_options = bson_value->view();
-    try{
+    try
+    {
       fDetector = bson_options["detectors"][fHostname].get_utf8().value.to_string();
-    }catch(const std::exception& e){
+    }
+    catch(const std::exception& e)
+    {
       fLog->Entry(MongoLog::Warning, "No detector specified for this host");
       return -1;
     }
@@ -74,18 +87,23 @@ int Options::Load(std::string name, mongocxx::collection* opts_collection, std::
   return -1;
 }
 
-long int Options::GetLongInt(std::string path, long int default_value){
-  try{
+long int Options::GetLongInt(std::string path, long int default_value)
+{
+  try
+  {
     return bson_options[path.c_str()].get_int64();
   }
-  catch (const std::exception &e){
+  catch (const std::exception &e)
+  {
     // Some APIs autoconvert big ints to doubles. Why? I don't know.
     // But we can handle this here rather than chase those silly things
     // around in each implementation.
-    try{
+    try
+    {
       return (long int)(bson_options[path.c_str()].get_double());
     }
-    catch(const std::exception &e){
+    catch(const std::exception &e)
+    {
       fLog->Entry(MongoLog::Local, "Using default value for %s", path.c_str());
       return default_value;
     }
@@ -94,17 +112,26 @@ long int Options::GetLongInt(std::string path, long int default_value){
 }
 
 double Options::GetDouble(std::string path, double default_value) {
-  try{
+  try
+  {
     return bson_options[path].get_double();
-  } catch (const std::exception& e) {
+  } 
+  catch (const std::exception& e) 
+  {
     // maybe it's actually a long?
-    try{
+    try
+    {
       return bson_options[path].get_int64();
-    }catch(const std::exception& ee) {
+    }
+    catch(const std::exception& ee) 
+    {
       // an integer???
-      try{
+      try
+      {
         return bson_options[path].get_int32();
-      }catch(const std::exception& eee) {
+      }
+      catch(const std::exception& eee) 
+      {
         fLog->Entry(MongoLog::Local, "Using default value for %s", path.c_str());
         return default_value;
       }
