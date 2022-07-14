@@ -475,6 +475,7 @@ int main(int argc, char** argv){
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
 	        fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
+          fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
           fLog->SetRunId(fOptions->GetInt("number", -1));
           fLog->Entry(MongoLog::Local, "Took %i ms to load config", dt);
