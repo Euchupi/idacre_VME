@@ -21,6 +21,9 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   if(Load(options_name, opts_collection, override_opts)!=0)
     throw std::runtime_error("Can't initialize options class");
   
+  fLog->Entry(MongoLog::Local, "baseline_dac_mode %s",GetString("baseline_dac_mode")  ) ;
+  fLog->Entry(MongoLog::Local, "baseline_falloback_mode %s",GetString("baseline_fallback_mode") ) ;
+  
   fDB = (*fClient)[dbname];
   fDAC_collection = fDB["dac_calibration"];
   int ref = -1;
