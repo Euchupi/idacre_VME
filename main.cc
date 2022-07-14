@@ -481,9 +481,9 @@ int main(int argc, char** argv){
           std::cout <<  "Main:hostname" << hostname << std::endl ;
           std::cout <<  "Main:options_name" << mode << std::endl ;
           
-          char new[100]; 
-          std::sprintf(new, "Main:Database name %s" , dbname )
-          fLog->Entry(MongoLog::Local,  new ) ;
+          char new_dbname[100]; 
+          std::sprintf(new_dbname, "Main:Database name %s" , dbname )
+          fLog->Entry(MongoLog::Local,  new_dbname ) ;
           
 	        
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
