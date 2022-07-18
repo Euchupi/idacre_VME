@@ -483,7 +483,7 @@ int main(int argc, char** argv){
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
           
           
-          int load_success = Options::Load(mode ,&opts_collection ,)
+          int load_success = Options::Load(mode ,&opts_collection ,override_json);
           
           /*
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
