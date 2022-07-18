@@ -65,6 +65,7 @@ struct fax_options_t {
   double drift_speed;
   double e_absorbtion_length;
 };
+// The struct only includes the data without the functions .
 
 class MongoLog;
 
@@ -102,7 +103,6 @@ public:
 
   void UpdateDAC(std::map<int, std::vector<uint16_t>>&);
 
-private:
   int Load(std::string, mongocxx::collection*, std::string);
   //Basic function : Load 
   
