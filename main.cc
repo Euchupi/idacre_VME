@@ -179,40 +179,6 @@ int PrintUsage() {
 
 
 
-int Pikachu(std::string name, mongocxx::collection* opts_collection, std::string override_opts) 
-{
-  using namespace bsoncxx::builder::stream;
-  auto pl = mongocxx::pipeline();
-  pl.match(document{} << "name" << name << finalize);
-  pl.lookup(document{} << "from" << "options" << "localField" << "includes" <<
-      "foreignField" << "name" << "as" << "subconfig" << finalize);
-  pl.add_fields(document{} << "subconfig" << open_document << "$concatArrays" << open_array <<
-      "$subconfig" << open_array << "$$ROOT" << close_array << close_array << close_document <<
-      finalize);
-  pl.unwind("$subconfig");
-  pl.group(document{} << "_id" << 0 << "config" << open_document << "$mergeObjects" <<
-      "$subconfig" << close_document << finalize);
-  pl.replace_root(document{} << "newRoot" << "$config" << finalize);
-  pl.project(document{} << "subconfig" << 0 << finalize);
-  if (override_opts != "")
-    pl.add_fields(bsoncxx::from_json(override_opts));
-  for (auto doc : opts_collection->aggregate(pl)) 
-  {
-    bson_value = new bsoncxx::document::value(doc);
-    bson_options = bson_value->view();
-    try
-    {
-      fDetector = bson_options["detectors"][fHostname].get_utf8().value.to_string();
-    }
-    catch(const std::exception& e)
-    {
-      fLog->Entry(MongoLog::Warning, "No detector specified for this host");
-      return -1;
-    }
-    return 0;
-  }
-  return -1;
-}
 
 
 
@@ -520,15 +486,10 @@ int main(int argc, char** argv){
           /*
           Options fOptions(fLog, mode, hostname, &opts_collection,
           pool, dbname, override_json);
-          
           fLog->Entry(MongoLog::Local, "Options Initialization");
-          */
-          
-          
           int load_success = Pikachu(mode ,&opts_collection ,override_json);
-          
           fLog->Entry(MongoLog::Local, "load_success!");
-  
+          */
           
           
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
