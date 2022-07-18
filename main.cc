@@ -471,7 +471,7 @@ int main(int argc, char** argv){
 	         auto oopts = doc["options_override"].get_document().view();
            override_json =doc["options_override"].get_utf8().value.to_string();
 	         // override_json = bsoncxx::to_json(oopts);
-           fLog->Entry(MongoLog::Local, "We have got the override_opts %s  " , str_oopts);
+           fLog->Entry(MongoLog::Local, "We have got the override_opts %s  " , override_json);
 	         }
 	        catch(const std::exception &e)
           {
