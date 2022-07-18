@@ -40,6 +40,7 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   
   fLog->Entry(MongoLog::Local, "We generated a bool load_ref %b", load_ref) ;
   
+  /*
   if (load_ref && ((ref = std::max(GetInt("baseline_reference_run"), GetNestedInt("baseline_reference_run."+fDetector))) == -1)) {
     // -1 is default return
     fLog->Entry(MongoLog::Error, "Please specify a reference run to use cached baselines");
@@ -57,6 +58,7 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
     }
     fLog->Entry(MongoLog::Local, "Loaded cached baselines from run %i", ref);
   }
+  */
 }
 
 Options::~Options(){

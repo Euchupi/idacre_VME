@@ -468,7 +468,7 @@ int main(int argc, char** argv){
 	         override_json = "";
 	         try
            {
-	         auto oopts = doc["options_override"].get_document().view();
+	         // auto oopts = doc["options_override"].get_document().view();
            override_json =doc["options_override"].get_utf8().value.to_string();
 	         // override_json = bsoncxx::to_json(oopts);
            fLog->Entry(MongoLog::Local, "We have got the override_opts %s  " , override_json);
@@ -482,8 +482,14 @@ int main(int argc, char** argv){
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
           
+          Options fOptions(fLog, mode, hostname, &opts_collection,
+          pool, dbname, override_json);
+          
+          fLog->Entry(MongoLog::Local, "Options Initialization");
           
           int load_success = Options::Load(mode ,&opts_collection ,override_json);
+          
+          fLog->Entry(MongoLog::Local, "load_success!");
           
           /*
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
