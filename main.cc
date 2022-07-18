@@ -482,6 +482,8 @@ int main(int argc, char** argv){
           std::string mode = doc["mode"].get_utf8().value.to_string();
           fLog->Entry(MongoLog::Local, "Getting options doc for mode %s", mode.c_str());
           
+          
+          /*
           Options fOptions(fLog, mode, hostname, &opts_collection,
           pool, dbname, override_json);
           
@@ -490,15 +492,16 @@ int main(int argc, char** argv){
           int load_success = Options::Load(mode ,&opts_collection ,override_json);
           
           fLog->Entry(MongoLog::Local, "load_success!");
+          */
           
-          /*
+          
           fLog->Entry(MongoLog::Local, "Ready to set up the foptions pointers" );
           fOptions = std::make_shared<Options>(fLog, mode, hostname, &opts_collection,
 			      pool, dbname, override_json);
             //This command does not work well ... 
             //But if we successfully debug it , everything will be ok . 
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
-          */ 
+          
           
           
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
