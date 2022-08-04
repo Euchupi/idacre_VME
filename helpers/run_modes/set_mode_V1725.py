@@ -39,6 +39,7 @@ run_mode = {
 	"baseline_dac_mode": "fit",
 	"baseline_dac_mode.tpc": "fit" ,
 	"baseline_fallback_mode": "fit" , 
+	"baseline_fixed_value" : 7000, 
 	"baseline_value": 16000,
 	"baseline_reference_run": -1 ,
 	"baseline_reference_run.tpc": -1 , 
