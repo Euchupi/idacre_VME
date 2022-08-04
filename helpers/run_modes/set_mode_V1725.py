@@ -32,10 +32,11 @@ run_mode = {
     "strax_chunk_length": 5000000000,
     "strax_fragment_length": 220,
     "baseline_dac_mode": "fit",
-	"baseline_fallback_mode": "cached" , 
+	"baseline_dac_mode.tpc": "fit"
+	"baseline_fallback_mode": "fit" , 
     "baseline_value": 16000,
-	"baseline_reference_run": 1 ,
-	"baseline_reference_run_tpc": 1 , 
+	"baseline_reference_run": -1 ,
+	"baseline_reference_run.tpc": -1 , 
     "firmware_version": 4.22,
     "boards":
     [
