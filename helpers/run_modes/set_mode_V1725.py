@@ -19,7 +19,7 @@ run_mode = {
     "detector" : "tpc",
 	"detectors": {"detector" : "tpc",
 				  "hostname" : "RelicsDAQ_reader_0",
-				  "RelicsDAQ_reader_0": "CylinderTPC",
+				  "RelicsDAQ_reader_0": "tpc",
 				  "RelicsDAQ": "tpc" , 
 				  "active" : "true",
 				  "stop_after" : "600"}, # second
