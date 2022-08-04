@@ -30,6 +30,7 @@ run_mode = {
 	"processing_threads" : 30 , 
 	"blt_safety_factor" : 1.5 ,
 	"blt_alloc" : 23 , 
+	"do_sn_check" : 0 , 
 	"strax_chunk_overlap": 500000000,
 	"strax_header_size": 31,
 	"strax_output_path": "/home/data/tpc",
