@@ -27,6 +27,7 @@ run_mode = {
     "mongo_uri": "mongodb://192.168.1.88:27017/admin",
     "mongo_database": "daq",
     "run_start":0,
+	"processing_threads" : 30 , 
     "strax_chunk_overlap": 500000000,
     "strax_header_size": 31,
     "strax_output_path": "/home/data/tpc",
