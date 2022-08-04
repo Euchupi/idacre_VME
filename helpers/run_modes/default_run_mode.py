@@ -14,7 +14,7 @@ collection = db['options']
 
 run_mode = {
 	# the run_mode name must be unique 
-    "name": "default_firmware_settings",
+    "name": "real_default_firmware_settings",
     "user": "zhut",
     "description": "Setup for default firmware",
     "detector" : "NaI",
