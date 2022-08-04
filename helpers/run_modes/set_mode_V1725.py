@@ -32,7 +32,7 @@ run_mode = {
     "strax_chunk_length": 5000000000,
     "strax_fragment_length": 220,
     "baseline_dac_mode": "fit",
-	"baseline_dac_mode.tpc": "fit"
+	"baseline_dac_mode.tpc": "fit" ,
 	"baseline_fallback_mode": "fit" , 
     "baseline_value": 16000,
 	"baseline_reference_run": -1 ,
