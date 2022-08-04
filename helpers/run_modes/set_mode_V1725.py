@@ -14,6 +14,7 @@ collection = db['options']
 run_mode = {
 	# the run_mode name must be unique 
     "name": "V1725_default_firmware_settings",
+	"number": 0 , 
     "user": "root",
     "description": "V1725_number_0",
     "detector" : "tpc",
