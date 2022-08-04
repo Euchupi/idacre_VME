@@ -1,0 +1,213 @@
+# ****************************************************************
+# DAW Configuration File
+# ****************************************************************
+
+# NOTE:
+# The setting modes can be [COMMON] (all boards-related), "[BOARD] #" (single board-related) or "[CHANNEL] #" (single channel-related)
+# The setting mode is specified by a C,B and G in the setting description
+# If a setting is CHANNEL-related, it can also be BOARD-related or COMMON (i.e. the setting refers to all the channels in all the boards of the system) 
+# However not all options that are COMMON can also be BOARD- or CHANNEL-related.  The "[BOARD] #" or "[CHANNEL] #" directives have no effect on such settings
+# The "[BOARD] #" and "[CHANNEL] #" modes are alternative to [COMMON] but do not exclude each other. This means that one can issue a command to a 
+# specific channel of a specific board, to all channels of a specific board or to a specific channel of all boards. 
+# When the "[BOARD] #" mode is set, the following settings apply to all channels (even if a specific channel was previously selected)  
+# The board index follows the board initialization order using the OPEN command (see below).
+# The lines between the commands @OFF and @ON will be skipped. This can be used to exclude parts of the config file.
+
+# ----------------------------------------------------------------
+# Settings common to the whole acquisition system.
+# ----------------------------------------------------------------
+[COMMON]
+
+# OPEN: open the digitizer
+# NOTE: when using the USB or CONET, the BA must be set to 0
+# The base address (if required) must be in the form "0xXXXXXXXX"
+# options: 
+# USB [LINKNUM] 0                  Desktop/NIM digitizer through USB             
+# USB [LINKNUM] [BA]               VME digitizer through USB-V1718 (BA = BaseAddress of the VME board, 32 bit hex)
+# PCI [LINKNUM] [CONET NODE] 0     Desktop/NIM/VME through CONET (optical link) 
+# PCI [LINKNUM] [CONET NODE] [BA]  VME digitizer through V2718 (BA = BaseAddress of the VME board, 32 bit hex)
+
+OPEN USB 0 0x32100000
+#OPEN USB 0 0
+#OPEN PCI 0 0 0x32110000
+#OPEN PCI 0 0 0
+
+# START ACQUISITION(SW,S_IN,FIRST_TRG,LVDS): board start acquisition signal source
+#start acquisition settings only apply when not in synchronization mode (see below) 
+START_ACQ SW
+
+# ENABLE SYNC(YES/NO): sets all the registers required for the synchronization procedure
+# board delays might need a further tuning according to the experimental setup used
+SYNC_ENABLE YES
+
+# Statistics Refresh period (msec)(C), including event plotting if enabled.
+STAT_REFRESH 1000
+
+# PERIODIC_PLOT(YES/NO)(C): if set to YES a spectrum will be plotted periodically, the period being set by the STAT_REFRESH variable
+# On slower PCs, disabling this feature might improve the demo sw's performances. Single events can be plotted by pressing the "p" key during acquisition 
+PERIODIC_PLOT YES
+
+# GNUPLOT_PATH: path to gnuplot executable file
+# remember: \ for windows, / for linux
+# included gnuplot execs might not work on all win/linux systems. Installing gnuplot and adding it to your path on the used system is advised
+# if the pre-installed, path-added gnuplot is used, set GNUPLOT_PATH to ""
+#GNUPLOT_PATH "./gnuplot_exec/linux/"
+#GNUPLOT_PATH  "..\gnuplot_exec\win\"
+
+# Enable output file: RAW,WAVE (YES/NO)(C)
+# The RAW mode allows to save the board dump (.bin)
+# The WAVE mode allows to save the last wave of each active channel (.txt)
+
+OUTFILE_RAW NO
+OUTFILE_WAVE NO
+
+# OUTPUT BINARY FILES PATH AND NAME
+# The default output directory in windows is "UserDir"\DAW_DEMO\DAW_output\ (created by the program)
+# The default output directory in linux is "UserDir"\DAW_output\ (created by the program) 
+# The default file name is run0
+# b,c,seg identify the board, channel and output segment (segmented according to OUTFILE_MAXSIZE):
+# "file_name"_raw_b#_seg#.bin for the raw
+# "file_name"_histo_b#_c#.txt for the histo
+# the following lines must be uncommented to change the default output directory and filename
+# if they are commented, "DAW_output" and "run0" will be the default output directory and name
+# OUTFILE_PATH DAW_output\
+# OUTFILE_NAME run0
+
+# SIZE OF A SINGLE OUTPUT BINARY FILE(in MBytes). After this size has been reached a new file will be open with a _(#+1) suffix. 
+OUTFILE_MAXSIZE 100
+
+# CONTINUOUS SW TRIGGER (YES/NO)
+CONT_SWTRIGGER NO
+
+# ENABLE_GRAPH: index of the channel enabled for plotting
+# the plotted channel can be chosen by using the 1-8 keys
+# 1-8 corresponds to channels 0-7 or 8-15; the group selection can be toggled by pressing 'g' 
+# the plotted board (in case of multiple boards) can be toggled by pressing the +/- keys
+ENABLE_GRAPH 0
+
+# ----------------------------------------------------------------
+# Board-specific (B) or channel-specific (CH) Settings.
+# The CH-settings can be applied on a channel basis
+# if the related channel section ([CHANNEL] #) is specified; 
+# if written in the [COMMON] section, the settings are applied to all channels.
+# Remember: What is channel-specific ([CHANNEL] #) can be also board-specific ([BOARD] #) and both can be [COMMON]
+# ----------------------------------------------------------------
+[COMMON]
+
+# EXTERNAL_TRIGGER(B): external trigger (TRGIN connector) input settings. When enabled, the external trigger can be either 
+# propagated (ACQUISITION_AND_TRGOUT) or not (ACQUISITION_ONLY) through the TRGOUT connector
+# options: DISABLED, ACQUISITION_ONLY, ACQUISITION_AND_TRGOUT
+EXTERNAL_TRIGGER  ACQUISITION_ONLY
+
+# FPIO_LEVEL(B): signal type (NIM or TTL) of the front panel I/O LEMO connectors 
+FPIO_LEVEL  TTL
+
+# MINIMUM RECORD LENGTH (0/2097151)(CH): record length. Each unit is equal to 10 samples
+RECORD_LENGTH 32
+
+# MAXIMUM TAIL(0/2097151)(CH): maximum number of over-threshold samples collected after the minimum record length ends. Each unit corresponds to 4 samples
+MAX_TAIL 1024
+
+# GAIN (0/1)(B): sets the input dynamic range (0->2Vpp, 1->0.5Vpp)
+GAIN_FACTOR 0
+
+# PRETRIGGER (0/511)(CH): it sets how long before the trigger the record length window should be opened. Each unit corresponds to 4 samples
+PRE_TRIGGER 4
+
+#LOOK-AHEAD WINDOW (0/511)(CH): samples collected after the over-threshold signal. Each unit corresponds to 4 samples
+N_LFW		4
+
+#USE DEFAULT BASELINE VALUE (YES/NO)(CH): If set to YES, the baseline is given a fixed value (see below)
+BLINE_DEFMODE NO
+
+#DEFAULT BASELINE VALUE(0/16383)(CH): Default value of the baseline (only used if BLINE_DEFMODE=YES)
+BLINE_DEFVALUE 8192
+
+#PULSE POLARITY (POSITIVE/NEGATIVE)(CH): signal polarity
+PULSE_POLARITY POSITIVE
+
+#ENABLE TEST PULSE (YES/NO)(B): Allows to replace the input channels with an internally-generated, exponentially-decaying pulse
+TEST_PULSE NO
+
+#TEST PULSE TYPE (0,1)(B): 0: exponential decay; 1: sawtooth
+TP_TYPE 0
+
+# SELF TRIGGER(YES/NO)(B): Enable the self trigger. If set to NO, software triggers are allowed
+SELF_TRIGGER YES
+
+#TRIGGER TRESHOLD (0/16385)(CH): trigger threshold
+TRG_THRESHOLD   200
+
+# ENABLE_INPUT: enable/disable the channel
+# options: YES, NO
+
+# DC_OFFSET: DC offset adjust (DAC channel setting) in percent of the Full Scale.
+# -50: analog input dynamic range = -Vpp to 0 (negative signals)
+# +50: analog input dynamic range = 0 to +Vpp (positive signals)
+# 0:   analog input dynamic range = -Vpp/2 to +Vpp/2 (bipolar signals)
+# options: -50.0 to 50.0  (floating point)
+
+[CHANNEL] 0
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 1
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 2
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 3
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 4
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 5
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 6
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 7
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 8
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 9
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 10
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 11
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 12
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 13
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 14
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
+[CHANNEL] 15
+ENABLE_INPUT           YES
+DC_OFFSET              0
+
