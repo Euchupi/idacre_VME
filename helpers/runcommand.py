@@ -46,7 +46,7 @@ def check_repeated(path, index):
 
 if __name__ == '__main__':
 
-    with MongoClient("mongodb://192.168.1.88:27017") as client:
+    with MongoClient("mongodb://192.168.1.88:27017/admin") as client:
         args=main()
         path = client['daq']['options'].find_one({'name':args.mode})['strax_output_path']
         index = args.number
