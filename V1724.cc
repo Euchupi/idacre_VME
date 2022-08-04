@@ -13,6 +13,7 @@
 
 
 V1724::V1724(std::shared_ptr<MongoLog>& log, std::shared_ptr<Options>& opts, int bid, unsigned address){
+  std::cout << "Initialize via the V1724" << std::endl ;
   fBoardHandle = -1;
   fLog = log;
   fOptions = opts;
@@ -37,7 +38,7 @@ V1724::V1724(std::shared_ptr<MongoLog>& log, std::shared_ptr<Options>& opts, int
   fPreTrigChRegister = 0x1038;
   fError = false;
   fBufferSize = 0x800000; // 8 MB total memory
-
+   
   fSampleWidth = 10;
   fClockCycle = 10;
   fBID = bid;
@@ -45,7 +46,9 @@ V1724::V1724(std::shared_ptr<MongoLog>& log, std::shared_ptr<Options>& opts, int
   fRolloverCounter = 0;
   fLastClock = 0;
   fBLTSafety = opts->GetDouble("blt_safety_factor", 1.5);
+  std::cout << "blt_safety_factor_got" << std::endl ; 
   fBLTalloc = opts->GetBLTalloc();
+  std::cout << "BLT alloc finished" << std::endl ; 
   // there's a more elegant way to do this, but I'm not going to write it
   fClockPeriod = std::chrono::nanoseconds((1l<<31)*fClockCycle);
   fArtificialDeadtimeChannel = 790;
@@ -65,29 +68,40 @@ V1724::~V1724(){
 }
 
 int V1724::Init(int link, int crate) {
+  std::cout << "Initialize the V1724" << std::endl ; 
   int a = CAENVME_Init(cvV2718, link, crate, &fBoardHandle);
+  std::cout << "CAENVME_Init" << a << std::endl ; 
   if(a != cvSuccess){
     fLog->Entry(MongoLog::Warning, "Board %i failed to init, error %i handle %i link %i bdnum %i",
             fBID, a, fBoardHandle, link, crate);
     fBoardHandle = -1;
+    std::cout << "CAENVME_Init failed" << std::endl ; 
     return -1;
   }
+
+
   fLog->Entry(MongoLog::Debug, "Board %i initialized with handle %i (link/crate)(%i/%i)",
 	      fBID, fBoardHandle, link, crate);
-
   uint32_t word(0);
   int my_bid(0);
   fROBuffer.assign(fBufferSize*2, 0); // double buffer for safety
+  std::cout << "fR0Buffer assigned" << std::endl ;
 
-  if (Reset()) {
+  if (Reset()) 
+  {
     fLog->Entry(MongoLog::Error, "Board %i unable to pre-load registers", fBID);
     return -1;
-  } else {
+  } else 
+  {
     fLog->Entry(MongoLog::Local, "Board %i reset", fBID);
   }
+  std::cout << "Board reset successfully" << std::endl ; 
+
   fDelayPerCh.assign(fNChannels, fDefaultDelay);
   fPreTrigPerCh.assign(fNChannels, fDefaultPreTrig);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::cout<< "Board sleep for 10 ms successfully" << std::endl ; 
+
   if (fOptions->GetInt("do_sn_check", 0) != 0) {
     if ((word = ReadRegister(fSNRegisterLSB)) == 0xFFFFFFFF) {
       fLog->Entry(MongoLog::Error, "Board %i couldn't read its SN lsb", fBID);
@@ -104,6 +118,7 @@ int V1724::Init(int link, int crate) {
         link, crate, fBID, my_bid);
     }
   }
+  std::cout << "sn_check successfully" << std::endl; 
   return 0;
 }
 

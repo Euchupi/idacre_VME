@@ -41,7 +41,8 @@ In principle , we should always define the global variables via the atomic libra
 #include "MongoLog.hh"
 #include "Options.hh"
 /*
-The most important c source files of redax are the DAQControl , CControl , MongoLog , Options 
+The most important c source files of redax are the DAQControl , CControl , MongoLog , Options
+And for the time being , we need the Options and DAQController most . 
 */
 
 #include <mongocxx/collection.hpp>
@@ -138,6 +139,8 @@ void UpdateStatus(std::shared_ptr<mongocxx::pool> pool, std::string dbname,
     try{
       controller->StatusUpdate(&collection);
       // The function is within the controller.cc that to update the status stored in the db['status']
+      
+      // std::cout<<"Sucessfully update the status "<< std::endl; 
       
     }catch(const std::exception &e){
       std::cout<<"Can't connect to DB to update."<<std::endl;
@@ -280,8 +283,6 @@ int main(int argc, char** argv){
 
 
 
-
-
   // We will consider commands addressed to this PC's ID 
   const int HOST_NAME_MAX = 64; // should be #defined in unistd.h but isn't???
   char chostname[HOST_NAME_MAX];
@@ -375,12 +376,12 @@ int main(int argc, char** argv){
   }
   std::thread status_update(&UpdateStatus, pool, dbname, std::ref(controller));
   // controller and recorder are different , DAQController is to read the data and then transfer to the DAQ instruments. 
-
+  //std::thread , another thread of the program so that we could move on the execute 
 
 
 
   using namespace bsoncxx::builder::stream;
-  auto opts = mongocxx::options::find_one_and_update{};
+  auto opts = mongocxx::options::find_one_and_update{}; // {} could be used to initialization . 
   opts.sort(document{} << "_id" << 1 << finalize);
   std::string ack_host = "acknowledged." + hostname;
   std::cout << "options sorted by time \n"  ; 
@@ -404,6 +405,7 @@ int main(int argc, char** argv){
       // The find_one_and_update includes the query and the updates from the opts (option collection)
       if (qdoc) 
       {
+        std::cout << "Find a command file  " << std::endl ;  
 	      //If we found a doc from the database and then get the command out of the doc
         auto doc = qdoc->view();
 	      std::string command = "";
@@ -415,18 +417,22 @@ int main(int argc, char** argv){
 	      }
 	      catch (const std::exception &e)
         {
+         std::cout<< "Received malformed command" <<bsoncxx::to_json(doc).c_str() << std::endl ;  
 	       fLog->Entry(MongoLog::Warning, "Received malformed command %s",
 			   bsoncxx::to_json(doc).c_str());
          // If something went wrong , we shall also log it . 
 	      }
 	      fLog->Entry(MongoLog::Debug, "Found a doc with command %s", command.c_str());
+        std::cout<< "Found a doc with command" << command.c_str() << std::endl ; 
         auto ack_time = system_clock::now();
         // It seems that we have already got the file .
         // Process commands
         
 	      if(command == "start")
         {
+         std::cout << "controller status" << controller->status() << std::endl ; 
 	       if(controller->status() == 2) 
+         // STATUS = ["Idle", "Arming", "Armed", "Running", "Error"] , 2 -- Armed . 
          {
 	          if(controller->Start()!=0)
             {
@@ -439,9 +445,11 @@ int main(int argc, char** argv){
 	        else
 	        fLog->Entry(MongoLog::Debug, "Cannot start DAQ since not in ARMED state (%i)", controller->status());
 	      }
+        // Basic functions 
         
         else if(command == "stop")
         {
+        std::cout << "controller status" << controller->status() << std::endl ; 
 	      // "stop" is also a general reset command and can be called any time
 	       if(controller->Stop()!=0)
 	       fLog->Entry(MongoLog::Error,
@@ -457,19 +465,23 @@ int main(int argc, char** argv){
         else if(command == "arm")
         {
          std::string override_json = "";
-	       // Can only arm if we're idle
+	       std::cout << "controller status  " << controller->status() << std::endl ; 
+         // Can only arm if we're idle
 	       if(controller->status() == 0)
          {
            //To arm the instruments , we have to stop the controllers first . 
-           fLog->Entry(MongoLog::Local, "We are going to stop the controller. ");
+           std::cout <<"We are going to stop the controller. " << std::endl ; 
 	         controller->Stop();
-           fLog->Entry(MongoLog::Local, "We have finished stopping the controller. ");
+           std::cout << "We have finished stopping the controller. " << std::endl ; 
            // Get an override doc from the 'options_override' field if it exists
 	         override_json = "";
-	         try
+	         
+           
+           /*
+           try
            {
 	         // auto oopts = doc["options_override"].get_document().view();
-           override_json =doc["options_override"].get_utf8().value.to_string();
+           // override_json =doc["options_override"].get_utf8().value.to_string();
 	         // override_json = bsoncxx::to_json(oopts);
            fLog->Entry(MongoLog::Local, "We have got the override_opts %s  " , override_json);
 	         }
@@ -477,6 +489,9 @@ int main(int argc, char** argv){
           {
             fLog->Entry(MongoLog::Local, "We did not get the override_opts " );
 	        }
+          */
+
+
 	        
           // Mongocxx types confusing so passing json strings around
           std::string mode = doc["mode"].get_utf8().value.to_string();
@@ -498,12 +513,17 @@ int main(int argc, char** argv){
             //This command does not work well ... 
             //But if we successfully debug it , everything will be ok . 
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
-          
+          std::cout << "Successfully set up the fOptions pointer" << std::endl ; 
           
           
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
           fLog->SetRunId(fOptions->GetInt("number", -1));
+          std::cout << "Successfully SetRunID" << std::endl ; 
+
           fLog->Entry(MongoLog::Local, "Took %i ms to load config", dt);
+          std::cout << "Took  " << dt << "ms to load config" << std::endl ; 
+
+
 	        if(controller->Arm(fOptions) != 0){
 	         fLog->Entry(MongoLog::Error, "Failed to initialize electronics");
 	         controller->Stop();

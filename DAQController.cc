@@ -36,14 +36,24 @@ DAQController::DAQController(std::shared_ptr<MongoLog>& log, std::string hostnam
   fPLL = 0;
 }
 
+
+
+
 DAQController::~DAQController(){
   if(fProcessingThreads.size()!=0)
     CloseThreads();
 }
 
+
+
+
 int DAQController::Arm(std::shared_ptr<Options>& options){
   fOptions = options;
-  fNProcessingThreads = fOptions->GetNestedInt("processing_threads."+fHostname, 8);
+  std::cout << "Start arm the devices" << std::endl ;
+
+  fNProcessingThreads = fOptions->GetInt("processing_threads");
+  std::cout << "Successfully initialized the fnprocessingthreads" << std::endl ; 
+
   fLog->Entry(MongoLog::Local, "Beginning electronics initialization with %i threads",
 	      fNProcessingThreads);
 
@@ -51,15 +61,23 @@ int DAQController::Arm(std::shared_ptr<Options>& options){
   fPLL = 0;
   fStatus = DAXHelpers::Arming;
   int num_boards = 0;
+
+  std::cout << "Prepare for get boards" << std::endl ; 
   for(auto& d : fOptions->GetBoards("V17XX")){
     fLog->Entry(MongoLog::Local, "Arming new digitizer %i", d.board);
 
     std::shared_ptr<V1724> digi;
+    std::cout << "Created the digi" << std::endl ; 
     try{
+      std::cout << "Board init start" << std::endl ; 
       if(d.type == "V1724_MV")
         digi = std::make_shared<V1724_MV>(fLog, fOptions, d.board, d.vme_address);
       else if(d.type == "V1730")
+      { 
+        std::cout << "Init the V1730" << std::endl ; 
         digi = std::make_shared<V1730>(fLog, fOptions, d.board, d.vme_address);
+        std::cout << "Finish initialized the V1730" << std::endl ;
+      }
       else if(d.type == "V1725")
       digi = std::make_shared<V1725>(fLog, fOptions, d.board, d.vme_address);
       else if(d.type == "f1724")
@@ -68,6 +86,7 @@ int DAQController::Arm(std::shared_ptr<Options>& options){
         digi = std::make_shared<V1724>(fLog, fOptions, d.board, d.vme_address);
       if (digi->Init(d.link, d.crate))
         throw std::runtime_error("Board init failed");
+      std::cout << "Board init in progress" << std::endl ;
       fDigitizers[d.link].emplace_back(digi);
       num_boards++;
     }catch(const std::exception& e) {
@@ -77,6 +96,9 @@ int DAQController::Arm(std::shared_ptr<Options>& options){
       return -1;
     }
   }
+  std::cout << "Finish arming the digiziers ." << std::endl ; 
+  std::cout << "This host has  " << num_boards << "boards" << std::endl ; 
+  std::cout << "Sleeping for two seconds" << std::endl ; 
   fLog->Entry(MongoLog::Local, "This host has %i boards", num_boards);
   fLog->Entry(MongoLog::Local, "Sleeping for two seconds");
   // For the sake of sanity and sleeping through the night,
@@ -84,10 +106,14 @@ int DAQController::Arm(std::shared_ptr<Options>& options){
   sleep(2); // <-- this one. Leave it here.
   // Seriously. This sleep statement is absolutely vital.
   fLog->Entry(MongoLog::Local, "That felt great, thanks.");
+
+
   std::map<int, std::vector<uint16_t>> dac_values;
   std::vector<std::thread> init_threads;
   init_threads.reserve(fDigitizers.size());
   std::map<int,int> rets;
+  std::cout << "init_threads_successfully" << std::endl ; 
+
   // Parallel digitizer programming to speed baselining
   for( auto& link : fDigitizers ) {
     rets[link.first] = 1;
@@ -124,6 +150,9 @@ int DAQController::Arm(std::shared_ptr<Options>& options){
   return 0;
 }
 
+
+
+
 int DAQController::Start(){
   if(fOptions->GetInt("run_start", 0) == 0){
     for(auto& link : fDigitizers ){
@@ -146,6 +175,9 @@ int DAQController::Start(){
   fStatus = DAXHelpers::Running;
   return 0;
 }
+
+
+
 
 int DAQController::Stop(){
 

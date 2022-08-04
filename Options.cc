@@ -21,31 +21,42 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   std::cout << "ready baseline_dac_mode2" << std::endl ;
   std::cout << "ready baseline_dac_mode3" << std::endl ;  
   
-  // This time , we could not initialize the class .
-  
   if(Load(options_name, opts_collection, override_opts)!=0)
+  {
+    std::cout << "Can not initialize options class 1st ." << std::endl ; 
     throw std::runtime_error("Can't initialize options class");
-  
+  }
+  else
+  {
+   std::cout << "Successfully initialized options class 1st ." << std::endl ; 
+  }
   // The Load function is defined within the class options 
-  
+
+
   std::cout << "baseline_dac_mode" << std::endl ; 
   std::cout << "baseline_dac_mode" << GetString("baseline_dac_mode") << std::endl ; 
+  std::cout << "baseline_dac_mode" << GetString("baseline_fallback_mode") << std::endl ;
   fLog->Entry(MongoLog::Local, "baseline_dac_mode %s",GetString("baseline_dac_mode")  ) ;
-  fLog->Entry(MongoLog::Local, "baseline_falloback_mode %s",GetString("baseline_fallback_mode") ) ;
+  fLog->Entry(MongoLog::Local, "baseline_fallback_mode %s",GetString("baseline_fallback_mode") ) ;
   
   fDB = (*fClient)[dbname];
   fDAC_collection = fDB["dac_calibration"];
   int ref = -1;
-  bool load_ref = GetString("baseline_dac_mode") == "cached" || GetNestedString("baseline_dac_mode."+fDetector) == "cached" || GetString("baseline_fallback_mode") == "cached";
-  
+  std::cout << "Created the fDAC_collection" << std::endl ;  
+
+  // bool load_ref = GetString("baseline_dac_mode") == "cached" || GetNestedString("baseline_dac_mode."+fDetector) == "cached" || GetString("baseline_fallback_mode") == "cached";
+  bool load_ref = GetString("baseline_dac_mode") == "cached"  || GetString("baseline_fallback_mode") == "cached";
   fLog->Entry(MongoLog::Local, "We generated a bool load_ref %b", load_ref) ;
-  
-  /*
+  std::cout << "we generated a bool load_ref  " << load_ref << std::endl ;   
+
+
   if (load_ref && ((ref = std::max(GetInt("baseline_reference_run"), GetNestedInt("baseline_reference_run."+fDetector))) == -1)) {
     // -1 is default return
     fLog->Entry(MongoLog::Error, "Please specify a reference run to use cached baselines");
+    std::cout << "Please specify a reference run to use cached baselines" << std::endl ;
     throw std::runtime_error("Config invalid");
   }
+  std::cout << "We generated load_ref and and baseline_reference_run " << std::endl  ;
   
   if (load_ref && (ref != -1)) 
   {
@@ -54,11 +65,16 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
     else 
     {
       fLog->Entry(MongoLog::Warning, "Could not load baseline reference run %i", ref);
+      std::cout << "Could not load baseline reference run " << ref << std::endl ; 
       throw std::runtime_error("Can't load cached baselines");
     }
     fLog->Entry(MongoLog::Local, "Loaded cached baselines from run %i", ref);
+    std::cout << "Loaded cached baselines from run" << ref << std::endl ; 
   }
-  */
+  else
+  {
+    std::cout << "We are not use the loaded reference !!" << std::endl ; 
+  }
 }
 
 Options::~Options(){
@@ -72,6 +88,10 @@ int Options::Load(std::string name, mongocxx::collection* opts_collection, std::
 {
   using namespace bsoncxx::builder::stream;
   auto pl = mongocxx::pipeline();
+  std::cout << "Successfully created the pipeline" << std::endl ; 
+
+  std::cout <<  "name/mode:" << name << std::endl ; 
+  
   pl.match(document{} << "name" << name << finalize);
   pl.lookup(document{} << "from" << "options" << "localField" << "includes" <<
       "foreignField" << "name" << "as" << "subconfig" << finalize);
@@ -83,12 +103,23 @@ int Options::Load(std::string name, mongocxx::collection* opts_collection, std::
       "$subconfig" << close_document << finalize);
   pl.replace_root(document{} << "newRoot" << "$config" << finalize);
   pl.project(document{} << "subconfig" << 0 << finalize);
+  
   if (override_opts != "")
     pl.add_fields(bsoncxx::from_json(override_opts));
+  std::cout << "the pipeline setup successfully !\n" << std::endl ; 
+  
+  int doc_num =0 ; 
   for (auto doc : opts_collection->aggregate(pl)) 
   {
+    doc_num += 1 ; 
+    std::cout << "getting one of the documents  "<< doc_num << std::endl ; 
+    
     bson_value = new bsoncxx::document::value(doc);
+    std::cout << "get the bson value" << std::endl ; 
+    
     bson_options = bson_value->view();
+    std::cout << "get the bson options" << std::endl ;  
+    
     try
     {
       fDetector = bson_options["detectors"][fHostname].get_utf8().value.to_string();
@@ -102,6 +133,7 @@ int Options::Load(std::string name, mongocxx::collection* opts_collection, std::
   }
   return -1;
 }
+
 
 long int Options::GetLongInt(std::string path, long int default_value)
 {
@@ -198,6 +230,7 @@ std::string Options::GetString(std::string path, std::string default_value){
     return default_value;
   }
 }
+// The getstring get the information from the bson_options. 
 
 std::string Options::GetNestedString(std::string path, std::string default_value){
   // Parse string
@@ -224,9 +257,9 @@ std::vector<BoardType> Options::GetBoards(std::string type){
   std::vector<BoardType> ret;
   bsoncxx::array::view subarr = bson_options["boards"].get_array().value;
 
-  std::vector <std::string> types;
+  std::vector <std::string> types; // a vector is a series of variables of the same type. 
   if(type == "V17XX")
-    types = {"V1724", "V1730", "V1724_MV", "f1724"};
+    types = {"V1724", "V1730", "V1724_MV", "V1725"  ,"f1724"};
   else if (type == "V27XX")
     types = {"V2718", "f2718"};
   else if (type == "V1495")
@@ -395,6 +428,8 @@ int Options::GetFaxOptions(fax_options_t& opts) {
   }
   return 0;
 }
+
+// the get series usually get it from the bason_options . 
 
 std::vector<uint16_t> Options::GetDAC(int bid, int num_chan, uint16_t default_value) {
   std::vector<uint16_t> ret(num_chan, default_value);

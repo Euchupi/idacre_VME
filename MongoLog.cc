@@ -182,6 +182,7 @@ int MongoLog::Entry(int priority, const std::string& message, ...){
   fCV.notify_one();
   return 0;
 }
+// The most important function is the MongoLog::Entry . 
 
 
 fs::path MongoLog_nT::OutputDirectory(struct tm* date) {

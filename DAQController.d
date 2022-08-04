@@ -90,7 +90,7 @@ DAQController.o DAQController.d : DAQController.cc DAQController.hh \
  /usr/local/include/mongocxx/v_noabi/mongocxx/result/insert_one.hpp \
  /usr/local/include/mongocxx/v_noabi/mongocxx/result/replace_one.hpp \
  /usr/local/include/mongocxx/v_noabi/mongocxx/result/update.hpp V1724.hh \
- V1724_MV.hh V1730.hh f1724.hh Options.hh \
+ V1724_MV.hh V1730.hh V1725.hh f1724.hh Options.hh \
  /usr/local/include/mongocxx/v_noabi/mongocxx/pool.hpp \
  /usr/local/include/mongocxx/v_noabi/mongocxx/options/pool.hpp \
  /usr/local/include/mongocxx/v_noabi/mongocxx/options/client.hpp \
