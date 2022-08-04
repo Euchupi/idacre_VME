@@ -19,6 +19,8 @@ run_mode = {
     "detector" : "tpc",
 	"detectors": {"detector" : "tpc",
 				  "hostname" : "RelicsDAQ_reader_0",
+				  "RelicsDAQ_reader_0": "CylinderTPC",
+				  "RelicsDAQ": "tpc" , 
 				  "active" : "true",
 				  "stop_after" : "600"}, # second
     "mongo_uri": "mongodb://192.168.1.88:27017/admin",
