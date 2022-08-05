@@ -31,11 +31,18 @@ run_mode = {
 	"blt_safety_factor" : 1.5 ,
 	"blt_alloc" : 23 , 
 	"do_sn_check" : 0 , 
-	"strax_chunk_overlap": 500000000,
+	
 	"strax_header_size": 31,
-	"strax_output_path": "/home/data/tpc",
 	"strax_chunk_length": 5000000000,
+	"strax_chunk_overlap": 500000000,
+	"strax_fragment_payload_bytes":220 ,
+	"strax_buffer_num_chunks": 2 ,
+	"strax_chunk_phase_limit" : 2 ,
+	"strax_output_path": "/home/data/tpc",
 	"strax_fragment_length": 220,
+	"compressor" : "lz4" , 
+
+	
 	"baseline_max_steps": 3,
 	"baseline_convergence_threshold": 3 ,
 	"baseline_start_dac" : 10000 , 
