@@ -46,8 +46,7 @@ run_mode = {
 	"baseline_max_steps": 3,
 	"baseline_convergence_threshold": 3 ,
 	"baseline_start_dac" : 10000 , 
-	"baseline_dac_mode": "fit",
-	"baseline_dac_mode.tpc": "fit" ,
+	"baseline_dac_mode": "fixed",
 	"baseline_fallback_mode": "fit" , 
 	"baseline_fixed_value" : 7000, 
 	"baseline_value": 16000,
@@ -69,7 +68,7 @@ run_mode = {
 	"firmware_version": 4.22,
     "boards":
     [
-        {"crate": 0, "link": 0, "board": 165,
+        {"crate": 0, "link": 0, "board": 0,
             "vme_address": "0", "type": "V1730", "host": "RelicsDAQ_reader_0"},
     ],
     "registers" : [
@@ -81,8 +80,8 @@ run_mode = {
 		},
 	],
 	
-	"thresholds":{"165":[10,10,10,10,10,10,10,10]},
-    "channels":{"165":[0, 1, 2, 3, 4, 5, 6, 7]},
+	"thresholds":{"0":[10,10,10,10,10,10,10,10]},
+    "channels":{"0":[0, 1, 2, 3, 4, 5, 6, 7]},
 }
 
 if collection.find_one({"name": run_mode['name']}) is not None:
