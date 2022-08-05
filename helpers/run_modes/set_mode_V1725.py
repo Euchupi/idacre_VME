@@ -36,7 +36,7 @@ run_mode = {
 	"strax_output_path": "/home/data/tpc",
 	"strax_chunk_length": 5000000000,
 	"strax_fragment_length": 220,
-	"baseline_max_steps": 30,
+	"baseline_max_steps": 3,
 	"baseline_convergence_threshold": 3 ,
 	"baseline_start_dac" : 10000 , 
 	"baseline_dac_mode": "fit",
