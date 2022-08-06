@@ -37,8 +37,8 @@ run_mode = {
 	"do_sn_check" : 0 , 
 	
 	"strax_header_size": 31,
-	"strax_chunk_length": 5000000000,
-	"strax_chunk_overlap": 500000000,
+	"strax_chunk_length": 50000000,
+	"strax_chunk_overlap": 5000000,
 	"strax_fragment_payload_bytes":220 ,
 	"strax_buffer_num_chunks": 2 ,
 	"strax_chunk_phase_limit" : 2 ,
