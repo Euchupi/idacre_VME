@@ -75,7 +75,7 @@ run_mode = {
 	"firmware_version": 4.22,
     "boards":
     [
-        {"crate": 0, "link": 0, "board": 0,
+        {"crate": 0, "link": 5, "board": 0,
             "vme_address": "0", "type": "V1730", "host": "RelicsDAQ_reader_0"},
     ],
     "registers" : [
