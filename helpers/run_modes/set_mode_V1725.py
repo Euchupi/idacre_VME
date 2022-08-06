@@ -81,25 +81,25 @@ run_mode = {
     "registers" : [
 			{
 					"comment" : "board reset register",
-					"board" : 0,
+					"board" : -1,
 					"reg" : "EF24",
 					"val" : "0"
 			},
 			{
 					"comment" : "Front Panel Trigger Out Enable Mask",
-					"board" : 0,
+					"board" : -1,
 					"reg" : "8110",
 					"val" : "00000000"
 			},
 			{
 					"comment" : "Trigger logic: 80000000 is software only, software + external C0000000",
-					"board" : 0,
+					"board" : -1,
 					"reg" : "810C",
 					"val" : "C0000000"
 			},
 			{
 				"comment": "Channel enable mask. FF= all channels on",
-				"board": 0,
+				"board": -1,
 				"reg": "8120",
 				"val": "FF"
 			},
