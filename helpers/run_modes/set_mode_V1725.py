@@ -65,7 +65,7 @@ run_mode = {
 	"baseline_min_adjustment" : 0xC , 
 	"baseline_rebin_log2" :1  ,
 	"baseline_bins_around_max" : 3,
-	"baseline_value" : 16000 , 
+	"baseline_value" : 0 , 
 	"baseline_min_dac" : 0 ,
 	"baseline_max_dac" : 1<<16 ,
 	"baseline_convergence_threshold" : 3 ,
