@@ -86,12 +86,6 @@ run_mode = {
 					"val" : "0"
 			},
 			{
-					"comment" : "events per BLT-originally it was 1",
-					"board" : 'all',
-					"reg" : "EF1C",
-					"val" : "1"
-			},
-			{
 					"comment" : "Front Panel Trigger Out Enable Mask",
 					"board" : 'all',
 					"reg" : "8110",
@@ -108,24 +102,6 @@ run_mode = {
 				"board": 0,
 				"reg": "8120",
 				"val": "FF"
-			},
-			{
-					"comment" : "Buffer organization register. A for new FW.",
-					"board" : 'all',
-					"reg" : "800C",
-					"val" : "7"
-			},
-			{
-					"comment" : "DAC default configuration. 1000 = neg unipolar + offset, 1000",
-					"board" : 'all',
-					"reg" : "8098",
-					"val" : "1000"
-			},
-			{
-					"comment" : "Event size register. Required for new FW. Words.",
-					"board" : 'all',
-					"reg" : "8020",
-					"val" : time_to_hex(10000)
 			},
 	],
 	
