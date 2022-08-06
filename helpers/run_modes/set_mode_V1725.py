@@ -9,7 +9,11 @@ client = MongoClient("mongodb://192.168.1.88:27017")
 db = client['daq']
 collection = db['options']
 
-
+def time_to_hex(t):
+	# nanosecond
+	samples = t/4
+	factored = int(samples/4)
+	return hex(factored)
 
 run_mode = {
 	# the run_mode name must be unique 
