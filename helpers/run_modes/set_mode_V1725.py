@@ -98,40 +98,16 @@ run_mode = {
 					"val" : "00000000"
 			},
 			{
-					"comment" : "for  BUSY on TRG_OUT, LVDS new management, General Purpose I/O, LVDS[15-4] outputs, LVDS[3-0] inputs, TRG/CLK at TTL level (139) or NIM level (138)",
-					"board" : 'all',
-					"reg" : "811C",
-					"val" : "D0138"
-			},
-			{
-					"comment" : "BERR register, 10=enable BERR",
-					"board" : 'all',
-					"reg" : "EF00",
-					"val" : "10"
-			},
-			{
 					"comment" : "Trigger logic: 80000000 is software only, software + external C0000000",
 					"board" : 'all',
 					"reg" : "810C",
 					"val" : "C0000000"
 			},
 			{
-					"comment" : "Post Trigger (time between trigger and end of time window). 80 for 2.5 us",
-					"board" : 'all',
-					"reg" : "8114",
-					"val" : time_to_hex(5000)
-			},
-			{
 				"comment": "Channel enable mask. FF= all channels on",
-				"board": 945,
+				"board": 0,
 				"reg": "8120",
-				"val": "0"
-			},
-			{
-				"comment": "Channel enable mask. FF= all channels on",
-				"board": 971,
-				"reg": "8120",
-				"val": "F"
+				"val": "FF"
 			},
 			{
 					"comment" : "Buffer organization register. A for new FW.",
@@ -144,12 +120,6 @@ run_mode = {
 					"board" : 'all',
 					"reg" : "8098",
 					"val" : "1000"
-			},
-			{
-					"comment" : "50: NO ZS + Falling + Sequential + External signal + Non Overlap Triggers, 20050 same with ZLE",
-					"board" : 'all',
-					"reg" : "8000",
-					"val" : "50"
 			},
 			{
 					"comment" : "Event size register. Required for new FW. Words.",
