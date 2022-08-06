@@ -81,19 +81,19 @@ run_mode = {
     "registers" : [
 			{
 					"comment" : "board reset register",
-					"board" : 'all',
+					"board" : 0,
 					"reg" : "EF24",
 					"val" : "0"
 			},
 			{
 					"comment" : "Front Panel Trigger Out Enable Mask",
-					"board" : 'all',
+					"board" : 0,
 					"reg" : "8110",
 					"val" : "00000000"
 			},
 			{
 					"comment" : "Trigger logic: 80000000 is software only, software + external C0000000",
-					"board" : 'all',
+					"board" : 0,
 					"reg" : "810C",
 					"val" : "C0000000"
 			},
