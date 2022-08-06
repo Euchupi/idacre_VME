@@ -53,7 +53,7 @@ run_mode = {
 	"baseline_max_steps": 3,
 	"baseline_convergence_threshold": 3 ,
 	"baseline_start_dac" : 10000 , 
-	"baseline_dac_mode": "fixed",
+	"baseline_dac_mode": "fit",
 	"baseline_fallback_mode": "fit" , 
 	"baseline_fixed_value" : 7000, 
 	"baseline_value": 16000,
