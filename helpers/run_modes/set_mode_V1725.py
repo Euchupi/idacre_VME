@@ -27,7 +27,7 @@ run_mode = {
 	"mongo_uri": "mongodb://192.168.1.88:27017/admin",
 	"mongo_database": "daq",
 	"run_start":0,
-	"processing_threads" : 30 , 
+	"processing_threads" : 1 , 
 	"blt_safety_factor" : 1.5 ,
 	"blt_alloc" : 23 , 
 	"do_sn_check" : 0 , 
@@ -41,6 +41,9 @@ run_mode = {
 	"strax_output_path": "/home/data/tpc",
 	"strax_fragment_length": 220,
 	"compressor" : "lz4" , 
+	
+	"transfer_batch" : 8 , 
+	"us_between_reads" : 10 , 
 
 	
 	"baseline_max_steps": 3,
