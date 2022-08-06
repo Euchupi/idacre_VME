@@ -27,7 +27,7 @@ run_mode = {
 	"mongo_uri": "mongodb://192.168.1.88:27017/admin",
 	"mongo_database": "daq",
 	"run_start":0,
-	"processing_threads" : 1 , 
+	"processing_threads" : 30 , 
 	"blt_safety_factor" : 1.5 ,
 	"blt_alloc" : 23 , 
 	"do_sn_check" : 0 , 
@@ -83,7 +83,7 @@ run_mode = {
 		},
 	],
 	
-	"thresholds":{"0":[10,10,10,10,10,10,10,10]},
+	"thresholds":{"0":[0,0,0,0,0,0,0,0]},
     "channels":{"0":[0, 1, 2, 3, 4, 5, 6, 7]},
 }
 
