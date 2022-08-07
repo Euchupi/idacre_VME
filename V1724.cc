@@ -55,6 +55,7 @@ V1724::V1724(std::shared_ptr<MongoLog>& log, std::shared_ptr<Options>& opts, int
   fDefaultDelay = 0xA * 2 * fSampleWidth; // see register document
   fDefaultPreTrig = 6 * 2 * fSampleWidth; // see register document
   fRegisterFlags = 1;
+  // When initialize the V1724 , the fRegisterFlags would be set to 1 . 
 }
 
 V1724::~V1724(){
@@ -214,6 +215,7 @@ int V1724::GetClockCounter(uint32_t timestamp){
 int V1724::WriteRegister(unsigned int reg, uint32_t value){
   bool echo = fRegisterFlags & 0x1;
   int ret = 0;
+  
   if (reg == fInputDelayRegister)
     fDelayPerCh.assign(fNChannels, 2*fSampleWidth*value);
   else if ((reg & fInputDelayChRegister) == fInputDelayChRegister)
@@ -222,6 +224,7 @@ int V1724::WriteRegister(unsigned int reg, uint32_t value){
     fPreTrigPerCh.assign(fNChannels, 2*fSampleWidth*value);
   else if ((reg & fPreTrigChRegister) == fPreTrigChRegister)
     fPreTrigPerCh[(reg>>16)&0xF] = 2*fSampleWidth*value;
+  
   if((ret = CAENVME_WriteCycle(fBoardHandle, fBaseAddress+reg,
 			&value,cvA32_U_DATA,cvD32)) != cvSuccess){
     fLog->Entry(MongoLog::Warning,
@@ -249,7 +252,12 @@ int V1724::Read(std::unique_ptr<data_packet>& outptr){
   using namespace std::chrono;
   auto t_start = high_resolution_clock::now();
   auto status = GetAcquisitionStatus();
-  if ((status & 0x8) == 0) return 0;
+  if ((status & 0x8) == 0) 
+  {
+    std::cout << "Nothing to record  Acquisition Status: "<< status  << std::endl ; 
+
+    return 0;
+  }
   if (status & 0x10) {
     // we're busy, let's check which channel
     std::string msg = "Board " + std::to_string(fBID) + " is BUSY:";
@@ -257,13 +265,15 @@ int V1724::Read(std::unique_ptr<data_packet>& outptr){
       if (ReadRegister(fChStatusRegister + 0x100*ch) & 0x1) msg += " CH" + std::to_string(ch);
     }
     fLog->Entry(MongoLog::Local, msg);
+    std::cout << "Local Busy" << msg << std::endl ;  
   }
   // Initialize
   int total_bytes=0, nb=0, ret=-5;
+  std::cout << "We got some data from the ADC system  " << std::endl;
 
   do{
     // we already allocated a readout buffer, we just read into it
-
+    std::cout << "Within the V1724::Read Reading loop" << std::endl ; 
     ret = CAENVME_FIFOBLTReadCycle(fBoardHandle, fBaseAddress, fROBuffer.data()+total_bytes,
 				     fBufferSize, cvA32_U_MBLT, cvD64, &nb);
     if( (ret != cvSuccess) && (ret != cvBusError) ){
@@ -275,6 +285,7 @@ int V1724::Read(std::unique_ptr<data_packet>& outptr){
       return -1;
     }
     total_bytes += nb;
+    std::cout << "total bytes" << total_bytes << std::endl ; 
     if (total_bytes > fBufferSize) fLog->Entry(MongoLog::Debug,
         "Board %i got a lot of data (%x/%x)",
         fBID, total_bytes, fBufferSize);
@@ -283,6 +294,7 @@ int V1724::Read(std::unique_ptr<data_packet>& outptr){
 
   // copy from the digitizer's buffer into something we can send downstream
   int words = total_bytes/sizeof(char32_t);
+  std::cout << "words" << words << std::endl ; 
   if(words>0){
     std::u32string s;
     s.reserve(words);

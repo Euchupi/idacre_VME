@@ -195,7 +195,10 @@ int DAQController::Start(){
           fLog->Entry(MongoLog::Warning, "Board %i not started?", digi->bid());
           return -1;
         } else
+        {
           fLog->Entry(MongoLog::Local, "Board %i started", digi->bid());
+          std::cout << "Board " << digi->bid() << "started" << std::endl ; 
+        }
       }
     }
   } 
@@ -260,7 +263,6 @@ int DAQController::Stop(){
 }
 
 void DAQController::ReadData(int link){
-  std::cout << "DAQController::ReadData" << std::endl ; 
   fReadLoop = true;
   fDataRate = 0;
   uint32_t board_status = 0;
@@ -278,11 +280,61 @@ void DAQController::ReadData(int link){
   int c = 0;
   const int num_threads = fNProcessingThreads;
 
-
   while(fReadLoop){
     for(auto& digi : fDigitizers[link]) {
+      // Channel 0 Configuration 
+      /*
+      std::cout << "" << std::endl ; 
+      std::cout << "" << std::endl ; 
+	    std::cout << "Minimum Record Length 0x1020 :" << digi->ReadRegister(0x1020) << std::endl;
+	    std::cout << "Dummy32 0x1024 :" << digi->ReadRegister(0x1024) << std::endl ; 
+	    std::cout << "Input Dynamic Range 0x1028 :" << digi->ReadRegister(0x1028) << std::endl ; 
+	    std::cout << "Input Delay 0x1034 :" << digi->ReadRegister(0x1034) << std::endl ; 
+	    std::cout << "Pre Trigger 0x1038 :" << digi->ReadRegister(0x1038) << std::endl ;
+	    std::cout << "Trigger Threshold 0x1060 :" << digi->ReadRegister(0x1060) << std::endl ;
+	    std::cout << "Fixed Baseline 0x1064 :" << digi->ReadRegister(0x1064) << std::endl ;
+	    //std::cout << "Couple Trigger Logic 0x1068 :" << digi->ReadRegister(0x1068) << std::endl ;
+	    std::cout << "Samples Under Threshold  0x1078 :" << digi->ReadRegister(0x1078) << std::endl ;
+	    std::cout << "Maximum Tail  0x107C :" << digi->ReadRegister(0x107C) << std::endl ;
+	    std::cout << "DPP Algorithm Control 0x1080 :" << digi->ReadRegister(0x1080) << std::endl ;
+	    std::cout << "Couple Over-Threshold Log 0x1084 :" << digi->ReadRegister(0x1084) << std::endl ;
+    	std::cout << "Channel Status 0x1088 :" << digi->ReadRegister(0x1088) << std::endl ;
+    	std::cout << "AMC Firmware Revision 0x108C :" << digi->ReadRegister(0x108C) << std::endl ;
+    	std::cout << "DC Offset 0x1098 :" << digi->ReadRegister(0x1098) << std::endl ;
+      std::cout << "Channel ADC Temperature 0x10A8 :" << digi->ReadRegister(0x10A8) << std::endl ;
 
-        
+      //Board information 
+    	std::cout << "Board Configuration 0x8000 :" << digi->ReadRegister(0x8000) << std::endl ;
+	    std::cout << "Acquisition Control 0x8100 :" << digi->ReadRegister(0x8100) << std::endl ;
+	    std::cout << "Acquisition Status 0x8104 :" << digi->ReadRegister(0x8104) << std::endl ;
+	    std::cout << "Global Trigger Mask 0x810C :" << digi->ReadRegister(0x810C) << std::endl ;
+      std::cout << "Front Panel TRG-OUT Enable 0x8110 :" << digi->ReadRegister(0x8110) << std::endl ;
+	    std::cout << "LVDS I/O 0x8118 :" << digi->ReadRegister(0x8118) << std::endl ;
+	    std::cout << "Front Panel I/O control 0x811C :" << digi->ReadRegister(0x811C) << std::endl ;
+    	std::cout << "Channel Enable Mask  0x8120 :" << digi->ReadRegister(0x8120) << std::endl ;
+     	std::cout << "ROC FPGA Firmware Revision 0x8124 :" << digi->ReadRegister(0x8124) << std::endl ;
+    	std::cout << "Event Stored 0x812C :" << digi->ReadRegister(0x812C) << std::endl ;
+    	std::cout << "Voltage Level Mode Configuration 0x8138 :" << digi->ReadRegister(0x8138) << std::endl ;
+	    std::cout << "Board info 0x8140 :" << digi->ReadRegister(0x8140) << std::endl ;
+    	std::cout << "Analog Monitor Mode 0x8144 :" << digi->ReadRegister(0x8144) << std::endl ;
+    	std::cout << "Event Size 0x814C :" << digi->ReadRegister(0x814C) << std::endl ;
+    	std::cout << "Fan Speed Control 0x8168 :" << digi->ReadRegister(0x8168) << std::endl ;
+    	std::cout << "Run/Start/Stop Delay 0x8170 :" << digi->ReadRegister(0x8170) << std::endl ;
+    	std::cout << "Board Failure Status 0x8178 :" << digi->ReadRegister(0x8178) << std::endl ;
+    	std::cout << "Front Panel LVDS I/O New Features 0x81A0 :" << digi->ReadRegister(0x81A0) << std::endl ;
+    	std::cout << "Buffer Occupancy Gain 0x81B4 :" << digi->ReadRegister(0x81B4) << std::endl ;
+    	std::cout << "Extented Veto Delay 0x81C4 :" << digi->ReadRegister(0x81C4) << std::endl ;
+    	std::cout << "Readout Control  0xEF00 :" << digi->ReadRegister(0xEF00) << std::endl ;
+    	std::cout << "Readout Status 0xEF04 :" << digi->ReadRegister(0xEF04) << std::endl ;
+    	std::cout << "Board ID 0xEF08 :" << digi->ReadRegister(0xEF08) << std::endl ;
+    	std::cout << "MCST Base Address and Control 0xEF0C :" << digi->ReadRegister(0xEF0C) << std::endl ;
+    	std::cout << "Relocation Address 0xEF10 :" << digi->ReadRegister(0xEF10) << std::endl ;
+    	std::cout << "Interrupt Status/ID 0xEF14 :" << digi->ReadRegister(0xEF14) << std::endl ;
+    	std::cout << "Interrupt Event Number 0xEF18 :" << digi->ReadRegister(0xEF18) << std::endl ;
+    	std::cout << "Max Number of Events per BLT 0xEF1C :" << digi->ReadRegister(0xEF1C) << std::endl ;
+    	std::cout << "Scratch 0xEF20 :" << digi->ReadRegister(0xEF20) << std::endl ;
+      */ 
+
       // periodically report board status
       if(readcycler == 0){
         board_status = digi->GetAcquisitionStatus();
@@ -303,12 +355,12 @@ void DAQController::ReadData(int link){
           if (err_val & 0x2) fLog->Entry(MongoLog::Local, "Board %i has VME bus error", digi->bid());
         }
       }
-      if((words = digi->Read(dp))<0){
-        std::cout << words << std::endl ; 
+      if((words = digi->Read(dp))<0){ 
         dp.reset();
         fStatus = DAXHelpers::Error;
         break;
       } else if(words>0){
+        std::cout << words << std::endl ; 
         dp->digi = digi;
         local_buffer.emplace_back(std::move(dp));
         bytes_this_loop += words*sizeof(char32_t);
@@ -362,8 +414,13 @@ int DAQController::OpenThreads(){
   std::cout << "All Threads has been initialized " << std::endl ; 
   fReadoutThreads.reserve(fDigitizers.size()); // .reserve could modify the capacity of the vector . 
   
+  int fDigitizers_count =0 ; 
   for (auto& p : fDigitizers)
+  {
+    fDigitizers_count += 1; 
     fReadoutThreads.emplace_back(&DAQController::ReadData, this, p.first);
+  }
+  std::cout << "fDigitizers number: " << fDigitizers_count << std::endl ; 
   std::cout << "DAQController::OpenThreads Exit" << std::endl; 
 
   return 0;
@@ -432,7 +489,7 @@ void DAQController::StatusUpdate(mongocxx::collection* collection) {
       } << close_document << 
     finalize;
   collection->insert_one(std::move(doc));
-  std::cout << "We now have " << i_count << " available StraxFormatter threads" << std::endl ;
+  // std::cout << "We now have " << i_count << " available StraxFormatter threads" << std::endl ;
   return;
 }
 
@@ -486,6 +543,7 @@ void DAQController::InitLink(std::vector<std::shared_ptr<V1724>>& digis,
       unsigned int val = DAXHelpers::StringToHex(regi.val);
       success+=digi->WriteRegister(reg, val);
     }
+    // We write the registers during the initlink . 
     std::cout << "fOptions successfully got the registers" << std::endl ;  
 
     success += digi->LoadDAC(dac_values[bid]);

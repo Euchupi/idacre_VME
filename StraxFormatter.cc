@@ -111,7 +111,7 @@ StraxFormatter::StraxFormatter(std::shared_ptr<Options>& opts, std::shared_ptr<M
     fLog->Entry(MongoLog::Error, "StraxFormatter::Initialize tried to create output directory but failed. Check that you have permission to write here.");
     throw std::runtime_error("No write permissions");
   }
-  std::cout << "StraxFormatter got options information" << std::endl ; 
+  std::cout << "StraxFormatter got options information and got initialized ," << std::endl ; 
 }
 
 StraxFormatter::~StraxFormatter(){
@@ -346,6 +346,9 @@ void StraxFormatter::Process() {
     //std::cout << "StraxFormatter::Process 0.265" << std::endl ; 
     std::unique_lock<std::mutex> lk(fBufferMutex);
     //std::cout << "StraxFormatter::Process 0.268" << std::endl ; 
+
+    
+
     fCV.wait(lk, [&]{return fBuffer.size() > 0 || fActive == false;});
     //std::cout << "StraxFormatter::Process 0.27" << std::endl ; 
     if (fBuffer.size() > 0) {
