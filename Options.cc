@@ -17,9 +17,7 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   
   bson_value = NULL;
   
-  std::cout << "ready baseline_dac_mode1" << std::endl ; 
-  std::cout << "ready baseline_dac_mode2" << std::endl ;
-  std::cout << "ready baseline_dac_mode3" << std::endl ;  
+  std::cout << "Function Options::Options" << std::endl ; 
   
   if(Load(options_name, opts_collection, override_opts)!=0)
   {
@@ -33,9 +31,8 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   // The Load function is defined within the class options 
 
 
-  std::cout << "baseline_dac_mode" << std::endl ; 
   std::cout << "baseline_dac_mode" << GetString("baseline_dac_mode") << std::endl ; 
-  std::cout << "baseline_dac_mode" << GetString("baseline_fallback_mode") << std::endl ;
+  std::cout << "baseline_fallback_mode" << GetString("baseline_fallback_mode") << std::endl ;
   fLog->Entry(MongoLog::Local, "baseline_dac_mode %s",GetString("baseline_dac_mode")  ) ;
   fLog->Entry(MongoLog::Local, "baseline_fallback_mode %s",GetString("baseline_fallback_mode") ) ;
   
@@ -73,8 +70,9 @@ Options::Options(std::shared_ptr<MongoLog>& log, std::string options_name, std::
   }
   else
   {
-    std::cout << "We are not use the loaded reference !!" << std::endl ; 
+    std::cout << "We are not using the loaded reference !!" << std::endl ; 
   }
+  std::cout << "Finish initialized the Options" << std::endl ; 
 }
 
 Options::~Options(){
@@ -270,6 +268,7 @@ std::vector<BoardType> Options::GetBoards(std::string type){
   for(bsoncxx::array::element ele : subarr){
     std::string btype = ele["type"].get_utf8().value.to_string();
     if(!std::count(types.begin(), types.end(), btype))
+    // Check whether or not the btype is included 
       continue;
     try{
       if(ele["host"].get_utf8().value.to_string() != fHostname)

@@ -515,26 +515,25 @@ int main(int argc, char** argv){
           fLog->Entry(MongoLog::Local, "Successfully set up the fOptions pointer");
           std::cout << "Successfully set up the fOptions pointer" << std::endl ; 
           
-          
           int dt = duration_cast<milliseconds>(system_clock::now()-ack_time).count();
           fLog->SetRunId(fOptions->GetInt("number", -1));
-          std::cout << "Successfully SetRunID" << std::endl ; 
-
           fLog->Entry(MongoLog::Local, "Took %i ms to load config", dt);
           std::cout << "Took  " << dt << "ms to load config" << std::endl ; 
 
 
 	        if(controller->Arm(fOptions) != 0){
+           std::cout  << "failed to arm the controller" << std::endl ; 
 	         fLog->Entry(MongoLog::Error, "Failed to initialize electronics");
 	         controller->Stop();
 	         }
           else
           {
+            std::cout << "Initialized electronics" << std::endl ;
 	        fLog->Entry(MongoLog::Debug, "Initialized electronics");
 	        }
+          std::cout << "Main Arm command finished" << std::endl ; 
+          sleep(5);
 	      } // if status is ok
-	      
-        
         else
 	       fLog->Entry(MongoLog::Warning, "Cannot arm DAQ while not 'Idle'");
 	    }
@@ -549,6 +548,7 @@ int main(int argc, char** argv){
     std::this_thread::sleep_for(milliseconds(100));
   }
   
+  std::cout << "The last part of main.cc" << std::endl ; 
   status_update.join();
   controller.reset();
   fOptions.reset();

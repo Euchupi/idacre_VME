@@ -10,7 +10,7 @@ V1730::V1730(std::shared_ptr<MongoLog>& log, std::shared_ptr<Options>& options, 
   fArtificialDeadtimeChannel = 792;
   fDefaultDelay = 2*fSampleWidth*0xA; // see register document
   fDefaultPreTrig = 6*fSampleWidth; // undocumented value?
-  fBufferSize = 0x1400000; // 640 kS/ch
+  fBufferSize = 0xA000000; // 5.12MS/ch 
 }
 
 V1730::~V1730(){}

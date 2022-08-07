@@ -46,7 +46,7 @@ V1724::V1724(std::shared_ptr<MongoLog>& log, std::shared_ptr<Options>& opts, int
   fRolloverCounter = 0;
   fLastClock = 0;
   fBLTSafety = opts->GetDouble("blt_safety_factor", 1.5);
-  std::cout << "blt_safety_factor_got" << std::endl ; 
+  std::cout << "blt_safety_factor got" << std::endl ; 
   fBLTalloc = opts->GetBLTalloc();
   std::cout << "BLT alloc finished" << std::endl ; 
   // there's a more elegant way to do this, but I'm not going to write it
@@ -70,7 +70,7 @@ V1724::~V1724(){
 int V1724::Init(int link, int crate) {
   std::cout << "Initialize the V1724" << std::endl ; 
   int a = CAENVME_Init(cvV2718, link, crate, &fBoardHandle);
-  std::cout << "CAENVME_Init" << a << std::endl ; 
+  std::cout << "CAENVME_Init " << a << std::endl ; 
   if(a != cvSuccess){
     fLog->Entry(MongoLog::Warning, "Board %i failed to init, error %i handle %i link %i bdnum %i",
             fBID, a, fBoardHandle, link, crate);
@@ -118,7 +118,7 @@ int V1724::Init(int link, int crate) {
         link, crate, fBID, my_bid);
     }
   }
-  std::cout << "sn_check successfully" << std::endl; 
+  std::cout << "SN_Check succeeded" << std::endl; 
   return 0;
 }
 
@@ -297,12 +297,14 @@ int V1724::Read(std::unique_ptr<data_packet>& outptr){
 
 int V1724::LoadDAC(std::vector<uint16_t>& dac_values){
   // Loads DAC values into registers
+  std::cout << "Function V1724::LoadADC" << std::endl ; 
   for(unsigned ch=0; ch<fNChannels; ch++){
     if ((ReadRegister(fChStatusRegister + 0x100*ch) & 0x4) || WriteRegister(fChDACRegister + 0x100*ch, dac_values[ch])){
       fLog->Entry(MongoLog::Error, "Board %i ch %i failed to set DAC (0x%x)", fBID, ch, dac_values[ch]);
       return -1;
     }
   }
+  std::cout << "Finish Function V1724::LoadDAC" << std::endl ;
   return 0;
 }
 
@@ -364,20 +366,34 @@ int V1724::BaselineStep(std::vector<uint16_t>& dac_values, std::vector<int>& cha
    * :param step: the step number
    * :returns: <0 for critical failure, >0 for noncritical failure, 0 otherwise
    */
+  std::cout << "V1724::BaselineStep get baseline parameters" << std::endl ; 
   int triggers_per_step = fOptions->GetInt("baseline_triggers_per_step", 3);
+  //std::cout << 1 << std::endl ; 
   std::chrono::milliseconds ms_between_triggers(fOptions->GetInt("baseline_ms_between_triggers", 10));
+  //std::cout << 2 << std::endl ; 
   int adjustment_threshold = fOptions->GetInt("baseline_adjustment_threshold", 10);
+  //std::cout << 3 << std::endl ; 
   int min_adjustment = fOptions->GetInt("baseline_min_adjustment", 0xC);
+  //std::cout << 4 << std::endl ; 
   int rebin_factor = fOptions->GetInt("baseline_rebin_log2", 1); // log base 2
+  //std::cout << 5 << std::endl ; 
   int bins_around_max = fOptions->GetInt("baseline_bins_around_max", 3);
+  //std::cout << 6 << std::endl ; 
   int target_baseline = fOptions->GetInt("baseline_value", 16000);
+  //std::cout << 7 << std::endl ; 
   // int rather than uint16_t for type promotion reasons
   int min_dac = fOptions->GetInt("baseline_min_dac", 0), max_dac = fOptions->GetInt("baseline_max_dac", 1<<16);
+  //std::cout << 8 << std::endl ; 
   int convergence = fOptions->GetInt("baseline_convergence_threshold", 3);
+  //std::cout << 9 << std::endl ; 
   int counts_total(0), counts_around_max(0);
   double fraction_around_max = fOptions->GetDouble("baseline_fraction_around_max", 0.8), baseline;
+  //std::cout << 10 << std::endl ; 
   // 14-bit ADC to 16-bit DAC. Not 4 because we want some damping to prevent overshoot
   double adc_to_dac = fOptions->GetDouble("baseline_adc_to_dac", -3.);
+  //std::cout << 11 << std::endl ; 
+  std::cout << "V1724::BaselineStep got basic parameters  " << std::endl ; 
+
   uint32_t words_in_event, channel_mask, words_in_channel;
   int channels_in_event, words_read;
   if (!EnsureReady(1000, 1000)) {
@@ -491,6 +507,6 @@ int V1724::BaselineStep(std::vector<uint16_t>& dac_values, std::vector<int>& cha
     }
 
   } // for each channel
-
+  std::cout << "Exit the V1724::BaselineStep" << std::endl ; 
   return 0;
 }

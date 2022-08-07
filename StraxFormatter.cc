@@ -58,21 +58,26 @@ const std::map<std::string, std::function<long(std::shared_ptr<std::string>&, st
 };
 
 StraxFormatter::StraxFormatter(std::shared_ptr<Options>& opts, std::shared_ptr<MongoLog>& log){
+  //std::cout << "Initialize StraxFormatter 1 " << std::endl ; 
   fActive = true;
+  //std::cout << "Initialize StraxFormatter 2 " << std::endl ; 
   fChunkNameLength=6;
-  fStraxHeaderSize=24;
+  //std::cout << "Initialize StraxFormatter 3 " << std::endl ; 
   fBytesProcessed = 0;
+  //std::cout << "Initialize StraxFormatter 4 " << std::endl ; 
   fInputBufferSize = 0;
   fOutputBufferSize = 0;
   fProcTimeDP = fProcTimeEv = fProcTimeCh = fCompTime = 0.;
   fOptions = opts;
-  fChunkLength = long(fOptions->GetDouble("strax_chunk_length", 5)*1e9); // default 5s
-  fChunkOverlap = long(fOptions->GetDouble("strax_chunk_overlap", 0.5)*1e9); // default 0.5s
+  fStraxHeaderSize= fOptions->GetInt("strax_header_size",24);
+  fChunkLength = long(fOptions->GetDouble("strax_chunk_length", 5e9)); // default 5s
+  fChunkOverlap = long(fOptions->GetDouble("strax_chunk_overlap", 0.5e9)); // default 0.5s
   fFragmentBytes = fOptions->GetInt("strax_fragment_payload_bytes", 110*2);
   fFullFragmentSize = fFragmentBytes + fStraxHeaderSize;
   try {
     fCompressor = compressors.at(fOptions->GetString("compressor", "lz4"));
-  } catch (...) {
+  } 
+  catch (...) {
     fLog->Entry(MongoLog::Error, "Invalid compressor specified");
     throw std::runtime_error("Invalid compressor");
   }
@@ -106,6 +111,7 @@ StraxFormatter::StraxFormatter(std::shared_ptr<Options>& opts, std::shared_ptr<M
     fLog->Entry(MongoLog::Error, "StraxFormatter::Initialize tried to create output directory but failed. Check that you have permission to write here.");
     throw std::runtime_error("No write permissions");
   }
+  std::cout << "StraxFormatter got options information" << std::endl ; 
 }
 
 StraxFormatter::~StraxFormatter(){
@@ -193,6 +199,7 @@ void StraxFormatter::ProcessDatapacket(std::unique_ptr<data_packet> dp){
 
 int StraxFormatter::ProcessEvent(std::u32string_view buff,
     const std::unique_ptr<data_packet>& dp, std::map<int, int>& dpc) {
+      std::cout << "StraxFormatter::ProcessEvent" << std::endl;
   // buff = start of event
 
   // returns {words this event, channel mask, board fail, header timestamp}
@@ -223,6 +230,7 @@ int StraxFormatter::ProcessEvent(std::u32string_view buff,
 int StraxFormatter::ProcessChannel(std::u32string_view buff, int words_in_event,
     int channel_mask, uint32_t event_time, int& frags, int channel,
     const std::unique_ptr<data_packet>& dp, std::map<int, int>& dpc) {
+      std::cout << "StraxFormatter::ProcessChannel" << std::endl;
   // buff points to the first word of the channel's data
 
   int n_channels = std::bitset<max_channels>(channel_mask).count();
@@ -303,9 +311,11 @@ void StraxFormatter::AddFragmentToBuffer(std::string fragment, uint32_t ts, int 
   } else {
     fOverlaps[chunk_id].emplace_back(std::move(fragment));
   }
+  return ; 
 }
 
 int StraxFormatter::ReceiveDatapackets(std::list<std::unique_ptr<data_packet>>& in, int bytes) {
+  std::cout << "StraxFormatter::ReceiveDatapackets" << std::endl;
   using namespace std::chrono;
   auto start = high_resolution_clock::now();
   if (fBufferMutex.try_lock()) {
@@ -322,16 +332,22 @@ int StraxFormatter::ReceiveDatapackets(std::list<std::unique_ptr<data_packet>>& 
 }
 
 void StraxFormatter::Process() {
+  std::cout << "StraxFormatter::Process" << std::endl;
   // this func runs in its own thread
   fThreadId = std::this_thread::get_id();
   std::stringstream ss;
   ss<<fHostname<<'_'<<fThreadId;
   fFullHostname = ss.str();
   fActive = true;
+  //std::cout << "StraxFormatter::Process 0.25" << std::endl ; 
   std::unique_ptr<data_packet> dp;
+  //std::cout << "StraxFormatter::Process 0.26" << std::endl ; 
   while (fActive == true || fBuffer.size() > 0) {
+    //std::cout << "StraxFormatter::Process 0.265" << std::endl ; 
     std::unique_lock<std::mutex> lk(fBufferMutex);
+    //std::cout << "StraxFormatter::Process 0.268" << std::endl ; 
     fCV.wait(lk, [&]{return fBuffer.size() > 0 || fActive == false;});
+    //std::cout << "StraxFormatter::Process 0.27" << std::endl ; 
     if (fBuffer.size() > 0) {
       dp = std::move(fBuffer.front());
       fBuffer.pop_front();
@@ -342,9 +358,12 @@ void StraxFormatter::Process() {
       lk.unlock();
     }
   }
+  //std::cout << "StraxFormatter::Process 0.5" << std::endl ;
   if (fBytesProcessed > 0)
     End();
   if (fMutexWaitTime.size() > 0) std::sort(fMutexWaitTime.begin(), fMutexWaitTime.end());
+  //std::cout << "StraxFormatter:: Process exit " << std::endl ; 
+  return ; 
 }
 
 void StraxFormatter::WriteOutChunk(int chunk_i){

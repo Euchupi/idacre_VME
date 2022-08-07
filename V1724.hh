@@ -29,9 +29,9 @@ class V1724{
   inline uint16_t SampleWidth() {return fSampleWidth;}
   inline int GetClockWidth() {return fClockCycle;}
   int16_t GetADChannel() {return fArtificialDeadtimeChannel;}
-
-  virtual int LoadDAC(std::vector<uint16_t>&);
   inline unsigned GetNumChannels() {return fNChannels;}
+  
+  virtual int LoadDAC(std::vector<uint16_t>&);
   int SetThresholds(std::vector<uint16_t> vals);
 
   virtual std::tuple<int, int, bool, uint32_t> UnpackEventHeader(std::u32string_view);
