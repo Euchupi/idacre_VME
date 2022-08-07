@@ -37,8 +37,8 @@ run_mode = {
 	"do_sn_check" : 0 , 
 	
 	"strax_header_size": 31,
-	"strax_chunk_length": 50000000,
-	"strax_chunk_overlap": 5000000,
+	"strax_chunk_length": 5000000000,
+	"strax_chunk_overlap": 500000000,
 	"strax_fragment_payload_bytes":220 ,
 	"strax_buffer_num_chunks": 2 ,
 	"strax_chunk_phase_limit" : 2 ,
@@ -98,10 +98,10 @@ run_mode = {
 					"val" : "C0000000"
 			},
 			{
-				"comment": "Channel enable mask. FF= all channels on",
-				"board": -1,
+				"comment": "Channel enable mask. FF= all channels on for 8 channels ADC , FFFF for 16 channels ADC ",
+				"board": 0,
 				"reg": "8120",
-				"val": "FF"
+				"val": "0xFFFF"
 			},
 	],
 	
