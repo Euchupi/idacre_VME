@@ -18,6 +18,7 @@ def time_to_hex(t):
 run_mode = {
 	# the run_mode name must be unique 
     	"name": "V1725_default_firmware_settings",
+	# Change the run mode name . 
 	"number": 0 , 
     	"user": "root",
     	"description": "V1725_number_0",
@@ -43,6 +44,7 @@ run_mode = {
 	"strax_buffer_num_chunks": 2 ,
 	"strax_chunk_phase_limit" : 2 ,
 	"strax_output_path": "/home/data/tpc",
+	# Where you could find the output strax data 
 	"strax_fragment_length": 220,
 	"compressor" : "lz4" , 
 	
@@ -57,6 +59,7 @@ run_mode = {
 	"baseline_fallback_mode": "fit" , 
 	"baseline_fixed_value" : 8192, 
 	"baseline_value": 8192,
+	# baseline value , modify it when you could not fetch data 
 	"baseline_reference_run": -1 ,
 	"baseline_reference_run.tpc": -1 , 
 	"baseline_triggers_per_step": 3 , 
@@ -76,13 +79,15 @@ run_mode = {
     [
         {"crate": 0, "link": 0, "board": 0,
             "vme_address": "0", "type": "V1730", "host": "RelicsDAQ_reader_0"},
+	    # link is the ethernet link number of A3818 that the ADC connect to (0,1,2,3)
+	    # "board" is the name of the board , could be set to any non-negative int value . 
     ],
     "registers" : [
 			{
-					"comment" : "board reset register",
-					"board" : -1,
-					"reg" : "EF24",
-					"val" : "0"
+				"comment" : "board reset register",
+				"board" : -1,  # when the board is set to -1 , none of the boards would be affected . 
+				"reg" : "EF24",
+				"val" : "0"
 			},
 			{
 				"comment" : "Channel 0 Trigger Threshold",
