@@ -86,16 +86,16 @@ run_mode = {
 					"val" : "0"
 			},
 			{
-					"comment" : "Front Panel Trigger Out Enable Mask",
-					"board" : -1,
-					"reg" : "8110",
-					"val" : "00000000"
+				"comment" : "Channel 0 Trigger Threshold",
+				"board" : 0,
+				"reg" : "1060",
+				"val" : "c8"
 			},
 			{
-					"comment" : "Trigger logic: 80000000 is software only, software + external C0000000",
-					"board" : -1,
-					"reg" : "810C",
-					"val" : "C0000000"
+				"comment" : "Channel 0 Fixed Baseline",
+				"board" : 0,
+				"reg" : "1064",
+				"val" : "2000"
 			},
 			{
 				"comment": "Channel enable mask. FF= all channels on for 8 channels ADC , FFFF for 16 channels ADC ",
