@@ -17,11 +17,11 @@ def time_to_hex(t):
 
 run_mode = {
 	# the run_mode name must be unique 
-    "name": "V1725_default_firmware_settings",
+    	"name": "V1725_default_firmware_settings",
 	"number": 0 , 
-    "user": "root",
-    "description": "V1725_number_0",
-    "detector" : "tpc",
+    	"user": "root",
+    	"description": "V1725_number_0",
+    	"detector" : "tpc",
 	"detectors": {"detector" : "tpc",
 				  "hostname" : "RelicsDAQ_reader_0",
 				  "RelicsDAQ_reader_0": "tpc",
