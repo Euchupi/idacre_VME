@@ -40,6 +40,10 @@ $(EXEC_SLAVE) : $(OBJECTS_SLAVE)
 
 .PHONY: clean
 
+install:
+	sudo ln -sf ./redax /usr/bin/redax 
+
+
 clean:
 	rm -f *.o *.d
 	rm -f $(EXEC_SLAVE)
