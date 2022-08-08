@@ -360,7 +360,7 @@ void DAQController::ReadData(int link){
         fStatus = DAXHelpers::Error;
         break;
       } else if(words>0){
-        std::cout << words << std::endl ; 
+        //std::cout << words << std::endl ; 
         dp->digi = digi;
         local_buffer.emplace_back(std::move(dp));
         bytes_this_loop += words*sizeof(char32_t);
