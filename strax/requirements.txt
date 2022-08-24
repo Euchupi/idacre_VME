@@ -1,0 +1,17 @@
+blosc
+dill
+fsspec
+immutabledict
+lz4
+numba>=0.43.1
+numexpr
+numpy>=1.18.5
+packaging
+pandas
+pdmongo
+psutil
+pymongo<4.0
+scipy
+tqdm>=4.46.0
+zarr
+zstd
