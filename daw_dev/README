@@ -1,0 +1,48 @@
+-----------------------------------------------------------------------------
+
+                   --- CAEN SpA - Computing Division ---
+
+                                www.caen.it
+
+  -----------------------------------------------------------------------------
+
+  Program: DAW_Demo
+
+
+  -----------------------------------------------------------------------------
+
+
+  Content
+  -----------------------------------------------------------------------------
+
+  README.txt        :  This file.
+
+  ReleaseNotes.txt  :  Revision History and notes.
+
+   src		:  Source files
+   inc		:  Include files
+                   template specific files (config.txt)
+
+
+  System Requirements
+  -----------------------------------------------------------------------------
+  - Linux 32/64Bit
+  - Digitizer X730/ x725 family with DAW firmware
+
+
+  How to get support
+  ------------------
+
+  CAEN makes available the technical support of its specialists for requests
+  concerning CAEN products. Use the support form available at the following link:
+  https://www.caen.it/support-services/support-form
+
+
+  Description:
+  -----------------------------------------------------------------------------
+
+
+
+  Syntax
+  -----------------------------------------------------------------------------
+  DAW_Demo [config file]

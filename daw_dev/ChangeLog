@@ -1,0 +1,42 @@
+-----------------------------------------------------------------------------
+
+                   --- CAEN SpA - Computing Division ---
+
+  -----------------------------------------------------------------------------
+
+  DAW_Demo Notes
+
+  -----------------------------------------------------------------------------
+  
+  Rel. 1.1   - October 2019 
+
+  * Added option to disable automatic temperature calibration of the ADC
+
+  -----------------------------------------------------------------------------
+  
+  Rel. 1.0   - June 2019 
+  
+  * First official Release
+
+  -----------------------------------------------------------------------------
+
+
+  Description
+  -----------
+
+  This file describes the revision history of DAW_Demo, a sample program for
+  the x25/x730 family board with DAW firmware.
+  See the fileREADME.txt for more informations.
+
+  System Requirements
+  -------------------
+  - Linux 32/64Bit
+
+
+  How to get support
+  ------------------
+
+  CAEN makes available the technical support of its specialists for requests
+  concerning CAEN products. Use the support form available at the following link:
+  https://www.caen.it/support-services/support-form
+
